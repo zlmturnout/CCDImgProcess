@@ -34,7 +34,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.layoutWidget = QWidget(self.centralwidget)
         self.layoutWidget.setObjectName(u"layoutWidget")
-        self.layoutWidget.setGeometry(QRect(1110, 120, 481, 576))
+        self.layoutWidget.setGeometry(QRect(1040, 30, 481, 576))
         self.gridLayout_6 = QGridLayout(self.layoutWidget)
         self.gridLayout_6.setObjectName(u"gridLayout_6")
         self.gridLayout_6.setContentsMargins(0, 0, 0, 0)
@@ -316,7 +316,7 @@ class Ui_MainWindow(object):
         self.radioButton.setGeometry(QRect(1030, 870, 95, 20))
         self.layoutWidget1 = QWidget(self.centralwidget)
         self.layoutWidget1.setObjectName(u"layoutWidget1")
-        self.layoutWidget1.setGeometry(QRect(51, 110, 928, 841))
+        self.layoutWidget1.setGeometry(QRect(40, 10, 928, 841))
         self.horizontalLayout_6 = QHBoxLayout(self.layoutWidget1)
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
@@ -731,7 +731,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(2)
         self.toolBox.setCurrentIndex(0)
 
 
