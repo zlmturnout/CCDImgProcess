@@ -175,7 +175,8 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         # for measured img
         self.Mea_layout.addWidget(Mea_Canvas)
         self.Mea_layout.addWidget((NavigationToolbar(Mea_Canvas, self)))
-        self._Mea_ax = Mea_Canvas.figure.subplots()
+        self._Mea_ax = Mea_Canvas.figure.subplots(2,1)
+        print(f'ax {self._Mea_ax[0]},{self._Mea_ax[1]}')
         # for background img
         self.BGR_layout.addWidget(BGR_Canvas)
         self.BGR_layout.addWidget((NavigationToolbar(BGR_Canvas, self)))
@@ -498,6 +499,14 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         Args:
             event (_type_): _description_
         """
+        if event.inaxes != self._Main_ax.axes:
+            return
+        contains, attrd = self._Main_ax.contains(event)
+        if not contains:
+            return
+        # event handle show status
+        if self.Main_img_data.size==0:
+            return
         if self.draw_box_flag:
             self.end_col=int(event.xdata)
             self.end_row=int(event.ydata)
@@ -544,6 +553,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         """
         self._Mea_ax.cla()
         w, h = np.shape(mea_img_data)
+        print(f'shape of the mea img={np.shape(mea_img_data)}')
         if self._cbar_Mea:
             self._cbar_Mea.remove()
         im = self._Mea_ax.imshow(mea_img_data, cmap=cm.rainbow,vmin=Imin,vmax=Imax)
@@ -588,7 +598,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         :param main_img_data:
         :return:
         """
-        print(f'shape of the read img={np.shape(main_img_data)}')
+        #print(f'shape of the read img={np.shape(main_img_data)}')
         self._Main_ax.cla()
         if self._cbar_Main:
             self._cbar_Main.remove()
