@@ -1822,6 +1822,60 @@ color: rgb(255, 255, 255);
                 </widget>
                </item>
                <item>
+                <widget class="QToolButton" name="Select_column_tool">
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Arial</family>
+                   <pointsize>12</pointsize>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(33, 190, 193);
+border-bottom-color: rgb(139, 139, 139);
+border-right-color: rgb(48, 48, 48);
+selection-color: rgb(255, 85, 127);
+color: rgb(255, 255, 255);</string>
+                 </property>
+                 <property name="text">
+                  <string>Column</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QToolButton" name="Select_row_tool">
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Arial</family>
+                   <pointsize>12</pointsize>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(33, 190, 193);
+border-bottom-color: rgb(139, 139, 139);
+border-right-color: rgb(48, 48, 48);
+selection-color: rgb(255, 85, 127);
+color: rgb(255, 255, 255);</string>
+                 </property>
+                 <property name="text">
+                  <string>Row</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QToolButton" name="toolButton_2">
                  <property name="minimumSize">
                   <size>

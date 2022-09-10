@@ -603,6 +603,30 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.Draw_box_tool)
 
+        self.Select_column_tool = QToolButton(self.page)
+        self.Select_column_tool.setObjectName(u"Select_column_tool")
+        self.Select_column_tool.setMinimumSize(QSize(100, 40))
+        self.Select_column_tool.setFont(font)
+        self.Select_column_tool.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.verticalLayout_5.addWidget(self.Select_column_tool)
+
+        self.Select_row_tool = QToolButton(self.page)
+        self.Select_row_tool.setObjectName(u"Select_row_tool")
+        self.Select_row_tool.setMinimumSize(QSize(100, 40))
+        self.Select_row_tool.setFont(font)
+        self.Select_row_tool.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.verticalLayout_5.addWidget(self.Select_row_tool)
+
         self.toolButton_2 = QToolButton(self.page)
         self.toolButton_2.setObjectName(u"toolButton_2")
         self.toolButton_2.setMinimumSize(QSize(100, 40))
@@ -768,6 +792,8 @@ class Ui_MainWindow(object):
         self.Column_box.setTitle(QCoreApplication.translate("MainWindow", u"Column", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Refresh", None))
         self.Draw_box_tool.setText(QCoreApplication.translate("MainWindow", u"Draw box", None))
+        self.Select_column_tool.setText(QCoreApplication.translate("MainWindow", u"Column", None))
+        self.Select_row_tool.setText(QCoreApplication.translate("MainWindow", u"Row", None))
         self.toolButton_2.setText(QCoreApplication.translate("MainWindow", u"+", None))
         self.toolButton_3.setText(QCoreApplication.translate("MainWindow", u"-", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page), QCoreApplication.translate("MainWindow", u"Tools", None))

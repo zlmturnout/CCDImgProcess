@@ -1,4 +1,5 @@
 import time, random, sys, os, math
+from tkinter.messagebox import NO
 import matplotlib
 from matplotlib.patches import Rectangle
 import cv2
@@ -368,6 +369,10 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.Imin_text.returnPressed.connect(self.Imin_input_finished)
         self.Imax_text.returnPressed.connect(self.Imax_input_finished)
         self.draw_box_flag=False
+        self.select_row_flag=False
+        self.select_column_flag=False
+        self.Peak_img_data=np.array([])
+        self.Box_img_data=np.array([])
     
     @Slot(int)
     def Imin_SliderValueChange(self,value:int):
@@ -419,18 +424,56 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
 
     @Slot()
     def on_Draw_box_tool_clicked(self):
-        
+        self.find_peak_flag=False
         self.draw_box_flag=not self.draw_box_flag
         print(f'pressed {self.draw_box_flag}')
+        self.update_tools_status()
+    
+    @Slot()
+    def on_Select_column_tool_clicked(self):
+        """select the peak from the img
+
+        Returns:
+            _type_: _description_
+        """
+        self.draw_box_flag=False
+        self.select_row_flag=False
+        self.select_column_flag=not self.select_column_flag
+        print(f'find peak {self.select_column_flag} ')
+        self.update_tools_status()
+    
+    @Slot()
+    def on_Select_row_tool_clicked(self):
+        """select the peak from the img
+
+        Returns:
+            _type_: _description_
+        """
+        self.draw_box_flag=False
+        self.select_column_flag=False
+        self.select_row_flag=not self.select_row_flag
+        print(f'find peak {self.select_row_flag} ')
+        self.update_tools_status()
+
+    def update_tools_status(self):
+        """update status of all the tool buttons 
+
+        Returns:
+            _type_: _description_
+        """
         stylesheet=f"background-color: rgb(33, 190, 193);border-bottom-color: rgb(139, 139, 139);border-right-color: rgb(48, 48, 48);selection-color: rgb(255, 85, 127);color: rgb(255, 255, 255);"
         if self.draw_box_flag:
             self.Draw_box_tool.setStyleSheet(stylesheet+"border:2px dashed rgb(255, 84, 17);")
         else:
             self.Draw_box_tool.setStyleSheet(stylesheet)
-    
-   
-
-
+        if self.select_column_flag:
+            self.Select_column_tool.setStyleSheet(stylesheet+"border:2px dashed rgb(255, 84, 17);")
+        else:
+            self.Select_column_tool.setStyleSheet(stylesheet)
+        if self.select_row_flag:
+            self.Select_row_tool.setStyleSheet(stylesheet+"border:2px dashed rgb(255, 84, 17);")
+        else:
+            self.Select_row_tool.setStyleSheet(stylesheet)
     # end of img view part
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
     
@@ -466,11 +509,23 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.column_n=int(event.xdata)
         self.row_n=int(event.ydata)
         # box draw if draw box flag on
+        self.start_col=int(event.xdata)
+        self.start_row=int(event.ydata)
         if self.draw_box_flag:
-            self.start_col=int(event.xdata)
-            self.start_row=int(event.ydata)
             print(f'start({self.start_col},{self.start_row})')
             return
+        # find peak flag on
+        if self.select_row_flag:
+            print(f'start({self.start_col},{self.start_row})')
+            self.find_peak_img(self.start_row,self.start_col,pt=0)
+            return
+        if self.select_column_flag:
+            print(f'start({self.start_col},{self.start_row})')
+            self.find_peak_img(self.start_row,self.start_col,pt=1)
+            return
+        self.update_main_image()
+
+    def update_main_image(self):
         # normally, show row and column line
         Imin=self.Imin_Slider.value()
         Imax=self.Imax_Slider.value()
@@ -493,6 +548,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         #self.save_pd_data(pd_column_data)
         self.show_row_plot(row_list, row_index)
 
+
     def on_main_release(self,event):
         """get the end x,y and draw a box
 
@@ -513,7 +569,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             print(f'end ({self.end_col},{self.end_row})')
             self.box_width=self.end_col-self.start_col
             self.box_height=self.end_row-self.start_row
-            self.show_main_img(self.Main_img_data,show_lines=False,show_box=True,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
+            self.show_main_img(self.Main_img_data,show_lines=False,show_box=True,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value(),start_col=self.start_col,start_row=self.start_row,box_width=self.box_width,box_height=self.box_height)
             self.Box_img_data=self.get_box_image()
             self.show_mea_img(self.Box_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
 
@@ -527,7 +583,39 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         else:
             Box_img_data=self.Main_img_data[start_row:end_row,start_col:end_col]
             return Box_img_data
-            
+
+    def find_peak_img(self,row:int,col:int,pt:int=0|1):
+        """_summary_
+
+        Args:
+            row (int): peak at row number
+            col (int): peak at column number 
+            pt (int, optional): peak direction 0 is row,1 is col Defaults to 0 | 1.
+        """
+        if self.Main_img_data.size==0:
+            return None
+        w, h = np.shape(self.Main_img_data)
+        if pt==0:
+            # peak line in row
+            start_row=max(row-500,0)
+            end_row=min(row+500,h)
+            self.box_width=w
+            self.box_height=end_row-start_row
+            self.Peak_img_data=self.Main_img_data[start_row:end_row,:]
+            self.show_main_img(self.Main_img_data,show_lines=False,show_box=True,start_row=start_row,start_col=0,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value(),box_width=self.box_width,box_height=self.box_height)
+        elif pt==1:
+            # peak line in column
+            start_col=max(col-500,0)
+            end_col=min(col+500,h)
+            self.box_width=end_col-start_col
+            self.box_height=h
+            self.Peak_img_data=self.Main_img_data[:,start_col:end_col]
+            self.show_main_img(self.Main_img_data,show_lines=False,show_box=True,start_row=0,start_col=start_col,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value(),box_width=self.box_width,box_height=self.box_height)
+        
+        self.show_BGR_img(self.Peak_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
+        
+
+
 
     @Slot()
     def on_Save_row_col_btn_clicked(self):
@@ -562,7 +650,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self._cbar_Mea = self._Mea_ax.figure.colorbar(im, location='bottom', fraction=0.05)
         self._Mea_ax.figure.canvas.draw()
 
-    def show_BGR_img(self, BGR_img_data: np.array([])):
+    def show_BGR_img(self, BGR_img_data: np.array([]),Imin:int=1300,Imax:int=1400):
         """
         display background TIF img data
         :param BGR_img_data:
@@ -571,7 +659,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self._BGR_ax.cla()
         if self._cbar_BGR:
             self._cbar_BGR.remove()
-        im = self._BGR_ax.imshow(BGR_img_data, cmap=cm.rainbow)
+        im = self._BGR_ax.imshow(BGR_img_data, cmap=cm.rainbow,vmin=Imin,vmax=Imax)
         self._cbar_BGR = self._BGR_ax.figure.colorbar(im, location='bottom', fraction=0.05)
         self._BGR_ax.figure.canvas.draw()
 
@@ -589,7 +677,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self._cbar_Sub = self._Sub_ax.figure.colorbar(im, location='bottom', fraction=0.05)
         self._Sub_ax.figure.canvas.draw()
 
-    def show_main_img(self, main_img_data: np.array([]), show_lines=False, x_line=0, y_line=0,Imin:int=1300,Imax:int=1400,show_box=False):
+    def show_main_img(self, main_img_data: np.array([]), show_lines=False, x_line=0, y_line=0,Imin:int=1300,Imax:int=1400,show_box=False,start_col=0,start_row=0,box_width=500,box_height=500):
         """
         display the img data after subtraction
         :param main_img_data: np.array(img_data)
@@ -607,7 +695,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             self._Main_ax.axhline(y=y_line , color='deeppink', linestyle='--',linewidth=0.5)
             self._Main_ax.axvline(x=x_line , color='deeppink', linestyle='--',linewidth=0.5)
         if show_box:
-            self._Main_ax.add_patch(Rectangle((self.start_col,self.start_row),self.box_width,self.box_height,edgecolor='red',
+            self._Main_ax.add_patch(Rectangle((start_col,start_row),box_width,box_height,edgecolor='red',
                     facecolor='none',
                     lw=1))
         self._cbar_Main = self._Main_ax.figure.colorbar(im, location='bottom', fraction=0.05)
