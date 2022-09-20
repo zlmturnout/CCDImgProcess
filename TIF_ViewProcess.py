@@ -176,8 +176,8 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         # for measured img
         self.Mea_layout.addWidget(Mea_Canvas)
         self.Mea_layout.addWidget((NavigationToolbar(Mea_Canvas, self)))
-        self._Mea_ax = Mea_Canvas.figure.subplots(2,1)
-        print(f'ax {self._Mea_ax[0]},{self._Mea_ax[1]}')
+        self._Mea_ax = Mea_Canvas.figure.subplots()
+        #print(f'ax {self._Mea_ax[0]},{self._Mea_ax[1]}')
         # for background img
         self.BGR_layout.addWidget(BGR_Canvas)
         self.BGR_layout.addWidget((NavigationToolbar(BGR_Canvas, self)))
