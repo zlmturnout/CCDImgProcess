@@ -202,7 +202,7 @@ def Fit_peak_data(img_matrix:np.asarray([]),p_col:int,half_n:int,save_folder:str
 
     # save corrected_list data
     #corr_datafile=os.path.join(save_folder,f'Peakcorrected_half_n1196-2_square200-{half_n}-{filename}.xlsx')
-    corr_datafile=os.path.join(save_folder,f'ROI-peakfit-{filename}.xlsx')
+    corr_datafile=os.path.join(save_folder,f'ROI-peakfit-half_n-{half_n}_p_col-{p_col}_{filename}.xlsx')
 
     corrected_data=np.array(corrected_list,dtype=np.float32).T
     # save to excel
