@@ -1,3 +1,4 @@
+from re import S
 import time, random, sys, os, math
 from tkinter.messagebox import NO
 import matplotlib
@@ -28,6 +29,9 @@ from resource.Tools_functions import get_datetime, my_logger, creatPath, to_log,
     deco_count_time
 # import main UI function
 from UI.UI_CCD_img_Proc import Ui_MainWindow
+
+# import Gauss peak correction
+from Architect.TIF_PeakcorrectScript import Fit_peak_data
 
 # save path info
 save_path = os.path.join(os.getcwd(), 'save_img')
@@ -81,18 +85,12 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
 
     def _ini_img_data(self):
         # initialize all image data
-        self.Mea_img = None
-        self.BGR_img = None
         self.Sub_img = None
         self.Main_img = None
         # color bar
-        self._cbar_Mea = None
-        self._cbar_BGR = None
         self._cbar_Sub = None
         self._cbar_Main = None
         # np array data
-        self.Mea_img_data = np.array([])
-        self.BGR_img_data = np.array([])
         self.Sub_img_data = np.array([])
         self.Main_img_data = np.array([])
         self.Box_img_data = np.array([])
@@ -101,6 +99,9 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.column_n=0
         self.pd_row_data=pd.DataFrame()
         self.pd_col_data = pd.DataFrame()
+        # file title
+        self.file_folder=os.getcwd()
+        self.file_title=''
 
     def open_tif_img(self):
         """
@@ -109,24 +110,43 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         """
         img_data = np.array([])
         filename, filetype = QFileDialog.getOpenFileName(self, "open measured tif data file(supported 16bit TIF)",
-                                                         './', '*.tif')
+                                                         self.file_folder, '*.tif')
         print(filename, filetype)
+        # save corrected_list data
+        self.file_folder,file=os.path.split(filename)
+        self.file_title,extension=os.path.splitext(file)
         if os.path.isfile(filename) and filename.endswith('.tif'):
             img = Image.open(filename)
-            img_data = np.array(img)
+            #matrix = np.array(img,dtype=np.float32)
+            img_data = np.array(img,dtype=np.float32)
             print(f'shape of the read img={np.shape(img_data)}')
         return filename, img_data
 
-    def save_tif_data(self,img_data:np.array([])):
+    def save_tif_data(self,img_data:np.array([]),tif_file:str):
         """
         save data in the main figure box
         :return:
         """
-        filename, filetype = QFileDialog.getSaveFileName(self, "save tif data file(supported filetype:16bit tif)",
-                                                         './', '*.tif')
-        print(filename, filetype)
-        if filename.endswith('.tif'):
-            tifffile.imsave(filename, img_data)
+        
+        if tif_file.endswith('.tif'):
+            tifffile.imwrite(tif_file, img_data)
+    
+    def ROI_to_excel(self,img_data:np.array([]),save_folder:str,filename:str):
+        """save ROI img tif to excel file 
+
+        Args:
+            img_data (np.array): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        pd_img_data=pd.DataFrame(img_data)
+        if filename:
+            excel_datafile=os.path.join(save_folder,f'ROI-data-{filename}.xlsx')
+            excel_writer = pd.ExcelWriter(excel_datafile)
+            pd_img_data.to_excel(excel_writer)
+            excel_writer.save()
+            print(f'save ROI data to excel xlsx file successfully\nfile path: {excel_datafile}')
 
     #@log_exceptions(log_func=logger.error)
     def newTif(self):
@@ -147,9 +167,24 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
 
     def saveTif(self):
         if self.Main_img_data.size!=0:
-            self.save_tif_data(self.Main_img_data)
+            filename, filetype = QFileDialog.getSaveFileName(self, "save tif data file(supported filetype:16bit tif)",
+                                                         self.file_folder, '*.tif')
+            print(filename, filetype)
+            self.save_tif_data(self.Main_img_data,filename)
         else:
             self.report_status('no data to save')
+
+    @Slot()
+    def on_Save_ROI_btn_clicked(self):
+        if not self.Sub_img_data.size == 0:
+            tif_file, filetype = QFileDialog.getSaveFileName(self, "save tif data file(supported filetype:16bit tif)",
+                                                         self.file_folder, '*.tif')
+            print(tif_file, filetype)
+            self.save_tif_data(self.Sub_img_data,tif_file)
+            save_folder,file=os.path.split(tif_file)
+            filename,extension=os.path.splitext(file)
+            self.ROI_to_excel(self.Sub_img_data,save_folder,filename)
+            
 
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
     """
@@ -157,31 +192,18 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
     """
 
     def _ini_fig(self):
-        # add Gridlayout into the Plot box [Mea,BGR,Sub,Mainfig]
-        self.Mea_layout = QGridLayout(self.Mea_box)
-        self.BGR_layout = QGridLayout(self.BGR_box)
+        # add Gridlayout into the Plot box [Sub,Mainfig]
         self.Sub_layout = QGridLayout(self.Sub_box)
         # main layout
         self.Main_layout = QGridLayout(self.Main_fig_box)
         self.Row_layout = QGridLayout(self.Row_box)
         self.Col_layout = QGridLayout(self.Column_box)
         # create matplotlib FigureCanvas for displaying Tif
-        Mea_Canvas = FigureCanvas(Figure())
-        BGR_Canvas = FigureCanvas(Figure())
         Sub_Canvas = FigureCanvas(Figure())
         Main_Canvas = FigureCanvas(Figure())
         Row_Canvas = FigureCanvas(Figure(figsize=(0.4, 6)))
         Col_Canvas = FigureCanvas(Figure(figsize=(6, 0.4)))
-        # add the figure canvas into the Plot box [Mea,BGR,Sub,Mainfig]
-        # for measured img
-        self.Mea_layout.addWidget(Mea_Canvas)
-        self.Mea_layout.addWidget((NavigationToolbar(Mea_Canvas, self)))
-        self._Mea_ax = Mea_Canvas.figure.subplots()
-        #print(f'ax {self._Mea_ax[0]},{self._Mea_ax[1]}')
-        # for background img
-        self.BGR_layout.addWidget(BGR_Canvas)
-        self.BGR_layout.addWidget((NavigationToolbar(BGR_Canvas, self)))
-        self._BGR_ax = BGR_Canvas.figure.subplots()
+        # add the figure canvas into the Plot box [Sub,Mainfig]
         # for subtract img
         self.Sub_layout.addWidget(Sub_Canvas)
         self.Sub_layout.addWidget((NavigationToolbar(Sub_Canvas, self)))
@@ -201,80 +223,20 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
 
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
     '''
-    start action button part
+    start correction action button part
     '''
 
     @log_exceptions(log_func=logger.error)
     @Slot()
-    def on_Measured_btn_clicked(self):
-        filename, filetype = QFileDialog.getOpenFileName(self, "open measured tif data file(supported 16bit TIF)",
-                                                         './', '*.tif')
-        print(filename, filetype)
-        self.Mea_path_line.setText(filename)
-        if os.path.isfile(filename) and filename.endswith('.tif'):
-            self.Mea_img = Image.open(filename)
-            self.Mea_img_data = np.array(self.Mea_img)
-            print(f'shape of the read img={np.shape(self.Mea_img_data)}')
-            self.show_mea_img(self.Mea_img_data)
-
-    @log_exceptions(log_func=logger.error)
-    @Slot()
-    def on_Background_btn_clicked(self):
-        filename, filetype = QFileDialog.getOpenFileName(self, "open background tif data file(supported 16bit TIF)",
-                                                         './', '*.tif')
-        print(filename, filetype)
-        self.BGR_path_line.setText(filename)
-        if os.path.isfile(filename) and filename.endswith('.tif'):
-            self.BGR_img = Image.open(filename)
-            self.BGR_img_data = np.array(self.BGR_img)
-            print(self.BGR_img_data.dtype)
-            print(f'shape of the read img={np.shape(self.BGR_img_data)}')
-            self.show_BGR_img(self.BGR_img_data)
-
-    @log_exceptions(log_func=logger.error)
-    @Slot()
-    def on_Subtract_btn_clicked(self):
+    def on_AutoCorrection_btn_clicked(self):
         """
-        subtract img_measured  by img_background
+        find the corrected width of RIXS line from the input image
         :return:
         """
-        if self.Mea_img_data.size == 0 or self.BGR_img_data.size == 0:
-            info = 'import both measured and background tif data first '
-            self.report_status(info)
-        elif np.shape(self.Mea_img_data) == np.shape(self.BGR_img_data):
-            # self.Sub_img_data=self.Mea_img_data-self.BGR_img_data
-            # self.Sub_img_data = np.subtract(self.Mea_img_data, self.BGR_img_data)
-            # use cv2
-            self.Sub_img_data = cv2.subtract(self.Mea_img_data, self.BGR_img_data)
-            print(self.Sub_img_data)
-            self.show_subtract_img(self.Sub_img_data)
-
-    # @log_exceptions(log_func=logger.error)
-    # @Slot()
-    # def on_AutoCorrection_btn_clicked(self):
-    #     """
-    #     find the corrected width of RIXS line from the input image
-    #     :return:
-    #     """
-    #     filename, filetype = QFileDialog.getOpenFileName(self, "open CCD tif data file(supported 16bit TIF)",
-    #                                                      './', '*.tif')
-    #     print(filename, filetype)
-    #     if os.path.isfile(filename) and filename.endswith('.tif'):
-    #         matrix = mpimage.imread(filename).astype('float64')
-    #         self.Main_img = Image.open(filename)
-    #         self.Main_img_data = np.array(self.Main_img,dtype='float64')
-    #         print(self.Main_img_data.dtype)
-    #         print(f'shape of the read img={np.shape(self.Main_img_data)}')
-    #         # print(matrix.dtype)
-    #         # print(f'matrix:{matrix}\n tif data:{self.Main_img_data}')
-
-    #         corrected_line,x_out,y_out = calculate_line_width(matrix)
-    #         print(corrected_line)
-    #         self.show_main_img(self.Main_img_data)
-    #         plt.figure(1)
-    #         plt.plot(x_out,y_out)
-    #         plt.show()
-
+        if not self.Sub_img_data.size==0:
+            Fit_peak_data(self.Sub_img_data,self.peak_col,self.half_n,self.file_folder,self.file_title)
+        else:
+            print("should select ROI first")
 
 
 
@@ -302,18 +264,21 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             self.show_column_plot(x_list,y_list)
             #self.save_pd_data(pd_col_data)
 
-    @Slot()
-    def on_Save_Substract_btn_clicked(self):
-        if not self.Sub_img_data.size == 0:
-            self.save_tif_data(self.Sub_img_data)
+    
 
     '''
         end action button part
     '''
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
+
+    # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
     """
     data process part
     """
+
+    def median_filter(self,matrix=np.array([]),filter_N:int=3):
+        median_matrix=cv2.medianBlur(matrix, filter_N)
+        return median_matrix
 
     @staticmethod
     def get_1D_Sum(tif_data:np.array([])):
@@ -344,7 +309,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         # save pd data to excel .xlsx file
         if not pd_data.empty:
             filename, filetype = QFileDialog.getSaveFileName(self, info+"(excel file:xlsx)",
-                                                             './', '*.xlsx')
+                                                             self.file_folder, '*.xlsx')
             # excel writer
             print(filename, filetype)
             if filename.endswith('.xlsx'):
@@ -423,6 +388,20 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.show_main_img(self.Main_img_data,Imin=Imin,Imax=Imax)
 
     @Slot()
+    def half_n_input_finished(self):
+        """get the half width of the fit box image
+
+        Returns:
+            _type_: _description_
+        """
+        self.half_n=self.set_half_n()
+    
+    def set_half_n(self):
+        half_n=int(self.half_n_input.text())
+        return half_n if half_n>10 and half_n<1024 else 50
+
+
+    @Slot()
     def on_Draw_box_tool_clicked(self):
         self.find_peak_flag=False
         self.draw_box_flag=not self.draw_box_flag
@@ -454,6 +433,13 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.select_row_flag=not self.select_row_flag
         print(f'find peak {self.select_row_flag} ')
         self.update_tools_status()
+
+    @Slot()
+    def on_Refresh_tool_clicked(self):
+        """refresh all
+        """
+        self.update_tools_status()
+        self.update_main_image()
 
     def update_tools_status(self):
         """update status of all the tool buttons 
@@ -489,6 +475,8 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.end_row=0
         self.box_width=0
         self.box_height=0
+        self.peak_col=0
+        self.half_n=50
         self.cidpress = self._Main_ax.figure.canvas.mpl_connect(
             'button_press_event', self.on_main_press)
         self.ridpress=self._Main_ax.figure.canvas.mpl_connect(
@@ -571,17 +559,29 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             self.box_height=self.end_row-self.start_row
             self.show_main_img(self.Main_img_data,show_lines=False,show_box=True,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value(),start_col=self.start_col,start_row=self.start_row,box_width=self.box_width,box_height=self.box_height)
             self.Box_img_data=self.get_box_image()
-            self.show_mea_img(self.Box_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
+            self.show_Sub_img(self.Box_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
+            
+
+
 
     def get_box_image(self):
         start_row=min(self.start_row,self.end_row)
         end_row=max(self.start_row,self.end_row)
         start_col=min(self.start_col,self.end_col)
         end_col=max(self.start_col,self.end_col)
+
         if self.Main_img_data.size==0:
             return None
         else:
             Box_img_data=self.Main_img_data[start_row:end_row,start_col:end_col]
+            # define the input matrix for correction
+            self.peak_col=round((start_col+end_col)/2)
+            self.half_n=round(abs(end_col-start_col)/2)
+            self.Sub_img_data=self.Main_img_data[:,self.peak_col-self.half_n:self.peak_col+self.half_n] 
+            ROI_area=f'ROI area box shape=({end_col-start_col},{end_row-start_row})\n center at ({self.peak_col},{round((start_row+end_row)/2)})'
+            peak_info=f'peak_col: {self.peak_col}  half_n: {self.half_n}\n'
+            self.show_ROI_info(peak_info+ROI_area)
+            print(f'peak_col: {self.peak_col}\nhalf_n: {self.half_n}')
             return Box_img_data
 
     def find_peak_img(self,row:int,col:int,pt:int=0|1):
@@ -597,25 +597,41 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         w, h = np.shape(self.Main_img_data)
         if pt==0:
             # peak line in row
-            start_row=max(row-500,0)
-            end_row=min(row+500,h)
+            self.half_n=self.set_half_n()
+            start_row=max(row-self.half_n,0)
+            end_row=min(row+self.half_n,h)
             self.box_width=w
             self.box_height=end_row-start_row
             self.Peak_img_data=self.Main_img_data[start_row:end_row,:]
             self.show_main_img(self.Main_img_data,show_lines=False,show_box=True,start_row=start_row,start_col=0,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value(),box_width=self.box_width,box_height=self.box_height)
+            # define the input matrix for correction
+            self.peak_col=round((start_row+end_row)/2)
+            self.Sub_img_data=self.Main_img_data[:,self.peak_col-self.half_n:self.peak_col+self.half_n] 
+            ROI_area=f'ROI area box shape=({w},{2*self.half_n})\n center at ({int(w/2)},{self.peak_col})'
+            print(f'peak_col: {self.peak_col} half_n: {self.half_n}\n')
+            peak_info=f'peak_col: {self.peak_col}half_n: {self.half_n}\n'
+            self.show_ROI_info(peak_info+ROI_area)
         elif pt==1:
             # peak line in column
-            start_col=max(col-500,0)
-            end_col=min(col+500,h)
+            self.half_n=self.set_half_n()
+            start_col=max(col-self.half_n,0)
+            end_col=min(col+self.half_n,h)
             self.box_width=end_col-start_col
             self.box_height=h
             self.Peak_img_data=self.Main_img_data[:,start_col:end_col]
             self.show_main_img(self.Main_img_data,show_lines=False,show_box=True,start_row=0,start_col=start_col,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value(),box_width=self.box_width,box_height=self.box_height)
-        
-        self.show_BGR_img(self.Peak_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
-        
+            # define the input matrix for correction
+            self.peak_col=round((start_col+end_col)/2)
+            self.Sub_img_data=self.Main_img_data[:,self.peak_col-self.half_n:self.peak_col+self.half_n] 
+            ROI_area=f'ROI area box shape=({2*self.half_n},{h})\n center at ({self.peak_col},{int(h/2)})'
+            peak_info=f'peak_col: {self.peak_col} half_n: {self.half_n}\n'
+            self.show_ROI_info(peak_info+ROI_area)
+            print(f'peak_col: {self.peak_col} half_n: {self.half_n}\n')
 
+        self.Sub_img_data=self.Peak_img_data
 
+        self.show_Sub_img(self.Peak_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
+        
 
     @Slot()
     def on_Save_row_col_btn_clicked(self):
@@ -627,55 +643,55 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             self.save_pd_data(self.pd_row_data,info=f'save line data at column: {self.column_n} ')
             self.save_pd_data(self.pd_col_data,info=f'save line data at row: {self.row_n} ')
 
+    @Slot()
+    def on_CV_median_tool_clicked(self):
+        """CV median filter
+        """
+        #Median_img_data=self.median_filter(self.Main_img_data,3)
+        #self.show_Sub_img(Median_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
+        self.Main_img_data=self.median_filter(self.Main_img_data,3)
+        self.show_Sub_img(self.Main_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
+        self.update_main_image()
 
+    def save_raw_img(self,raw_matrix:np.array([]),img_file:str):
+        """
+
+        Args:
+            raw_img_data (np.array): _description_
+        """
+            # plot the raw image
+        fig = plt.figure(figsize =(16, 9))
+        fig.canvas.manager.window.setWindowTitle("Visualize raw image")
+        plt.subplot(2,2,1),plt.imshow(raw_matrix,cmap=cm.rainbow,vmin=1300,vmax=1400)
+        plt.colorbar(location='right', fraction=0.1),plt.title("raw image")
+        sum_rows_raw=np.sum(raw_matrix,axis=0)
+        row_index=[i for i in range(len(sum_rows_raw)) ]
+        sum_cols_raw=np.sum(raw_matrix,axis=1)
+        col_index=[j for j in range(len(sum_cols_raw)) ]
+        plt.subplot(2,2,3),plt.plot(row_index,sum_rows_raw),plt.title("sum cols")
+        plt.subplot(2,2,2),plt.plot(col_index,sum_cols_raw),plt.title("sum rows")
+        plt.savefig(img_file)
+
+    # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
 
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
     """
     display img part
     """
-    def show_mea_img(self, mea_img_data: np.array([]),Imin:int=1300,Imax:int=1400):
-        """
-        display measured TIF img data
-        :param mea_img_data:
-        :return:
-        """
-        self._Mea_ax.cla()
-        w, h = np.shape(mea_img_data)
-        print(f'shape of the mea img={np.shape(mea_img_data)}')
-        if self._cbar_Mea:
-            self._cbar_Mea.remove()
-        im = self._Mea_ax.imshow(mea_img_data, cmap=cm.rainbow,vmin=Imin,vmax=Imax)
-        # self._Mea_ax.axhline(y=h/2,color='magenta',linestyle='--')
-        # self._Mea_ax.axvline(x=w/ 2, color='magenta', linestyle='--')
-        self._cbar_Mea = self._Mea_ax.figure.colorbar(im, location='bottom', fraction=0.05)
-        self._Mea_ax.figure.canvas.draw()
 
-    def show_BGR_img(self, BGR_img_data: np.array([]),Imin:int=1300,Imax:int=1400):
+    def show_Sub_img(self, Sub_img_data: np.array([]),Imin:int=1300,Imax:int=1400):
         """
         display background TIF img data
-        :param BGR_img_data:
+        :param Sub_img_data:
         :return:
         """
-        self._BGR_ax.cla()
-        if self._cbar_BGR:
-            self._cbar_BGR.remove()
-        im = self._BGR_ax.imshow(BGR_img_data, cmap=cm.rainbow,vmin=Imin,vmax=Imax)
-        self._cbar_BGR = self._BGR_ax.figure.colorbar(im, location='bottom', fraction=0.05)
-        self._BGR_ax.figure.canvas.draw()
-
-    def show_subtract_img(self, sub_img_data: np.array([])):
-        """
-        display the img data after subtraction
-        :param sub_img_data:
-        :return:
-        """
-        print(f'shape of the read img={np.shape(sub_img_data)}')
         self._Sub_ax.cla()
         if self._cbar_Sub:
             self._cbar_Sub.remove()
-        im = self._Sub_ax.imshow(sub_img_data, cmap=cm.rainbow)
+        im = self._Sub_ax.imshow(Sub_img_data, cmap=cm.rainbow,vmin=Imin,vmax=Imax)
         self._cbar_Sub = self._Sub_ax.figure.colorbar(im, location='bottom', fraction=0.05)
         self._Sub_ax.figure.canvas.draw()
+
 
     def show_main_img(self, main_img_data: np.array([]), show_lines=False, x_line=0, y_line=0,Imin:int=1300,Imax:int=1400,show_box=False,start_col=0,start_row=0,box_width=500,box_height=500):
         """
@@ -729,6 +745,11 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         #self._Col_ax.invert_xaxis()
         self._Col_ax.figure.tight_layout()
         self._Col_ax.figure.canvas.draw()
+    
+    def show_ROI_info(self,info_text:str):
+        curent_text=self.info_textbox.toPlainText()
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        self.info_textbox.setText(curent_text+'\n'+timestamp+'>\n'+info_text+'\n')
 
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
     """
