@@ -561,9 +561,6 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             self.Box_img_data=self.get_box_image()
             self.show_Sub_img(self.Box_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
             
-
-
-
     def get_box_image(self):
         start_row=min(self.start_row,self.end_row)
         end_row=max(self.start_row,self.end_row)
