@@ -27,13 +27,13 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1322, 1110)
+        MainWindow.resize(1200, 950)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMinimumSize(QSize(1200, 830))
+        MainWindow.setMinimumSize(QSize(1200, 950))
         MainWindow.setTabShape(QTabWidget.Triangular)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -58,7 +58,7 @@ class Ui_MainWindow(object):
         self.toolBox.setAutoFillBackground(False)
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 300, 413))
+        self.page.setGeometry(QRect(0, 0, 300, 253))
         self.gridLayout_2 = QGridLayout(self.page)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.Refresh_tool = QPushButton(self.page)
@@ -170,7 +170,7 @@ class Ui_MainWindow(object):
         self.toolBox.addItem(self.page, u"Tools")
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
-        self.page_2.setGeometry(QRect(0, 0, 300, 413))
+        self.page_2.setGeometry(QRect(0, 0, 300, 253))
         self.gridLayout_7 = QGridLayout(self.page_2)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.verticalLayout_3 = QVBoxLayout()
@@ -276,6 +276,7 @@ class Ui_MainWindow(object):
         self.Imin_text.setSizePolicy(sizePolicy1)
         self.Imin_text.setMinimumSize(QSize(80, 30))
         self.Imin_text.setMaximumSize(QSize(60, 25))
+        self.Imin_text.setFont(font)
 
         self.horizontalLayout.addWidget(self.Imin_text)
 
@@ -312,6 +313,7 @@ class Ui_MainWindow(object):
         self.Imax_text.setSizePolicy(sizePolicy1)
         self.Imax_text.setMinimumSize(QSize(80, 30))
         self.Imax_text.setMaximumSize(QSize(60, 25))
+        self.Imax_text.setFont(font)
 
         self.horizontalLayout_3.addWidget(self.Imax_text)
 
@@ -447,7 +449,7 @@ class Ui_MainWindow(object):
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.Column_box.sizePolicy().hasHeightForWidth())
         self.Column_box.setSizePolicy(sizePolicy2)
-        self.Column_box.setMinimumSize(QSize(600, 250))
+        self.Column_box.setMinimumSize(QSize(600, 200))
 
         self.verticalLayout_2.addWidget(self.Column_box)
 
@@ -477,7 +479,7 @@ class Ui_MainWindow(object):
         self.Open_img_btn.setObjectName(u"Open_img_btn")
         sizePolicy1.setHeightForWidth(self.Open_img_btn.sizePolicy().hasHeightForWidth())
         self.Open_img_btn.setSizePolicy(sizePolicy1)
-        self.Open_img_btn.setMinimumSize(QSize(250, 40))
+        self.Open_img_btn.setMinimumSize(QSize(200, 40))
         self.Open_img_btn.setFont(font)
         self.Open_img_btn.setStyleSheet(u"background-color: rgb(41, 173, 255);\n"
 "border-bottom-color: rgb(139, 139, 139);\n"
@@ -491,7 +493,7 @@ class Ui_MainWindow(object):
         self.Row_box.setObjectName(u"Row_box")
         sizePolicy.setHeightForWidth(self.Row_box.sizePolicy().hasHeightForWidth())
         self.Row_box.setSizePolicy(sizePolicy)
-        self.Row_box.setMinimumSize(QSize(250, 800))
+        self.Row_box.setMinimumSize(QSize(200, 800))
         self.Row_box.setLayoutDirection(Qt.LeftToRight)
 
         self.verticalLayout_4.addWidget(self.Row_box)
@@ -501,6 +503,18 @@ class Ui_MainWindow(object):
 
         self.info_textbox = QTextEdit(self.centralwidget)
         self.info_textbox.setObjectName(u"info_textbox")
+        self.info_textbox.setEnabled(True)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.info_textbox.sizePolicy().hasHeightForWidth())
+        self.info_textbox.setSizePolicy(sizePolicy3)
+        self.info_textbox.setMinimumSize(QSize(200, 120))
+        self.info_textbox.setMaximumSize(QSize(200, 16777215))
+        font2 = QFont()
+        font2.setFamilies([u"Arial"])
+        font2.setPointSize(10)
+        self.info_textbox.setFont(font2)
 
         self.verticalLayout_5.addWidget(self.info_textbox)
 
@@ -517,11 +531,11 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1322, 31))
-        font2 = QFont()
-        font2.setPointSize(14)
-        font2.setBold(False)
-        self.menubar.setFont(font2)
+        self.menubar.setGeometry(QRect(0, 0, 1200, 31))
+        font3 = QFont()
+        font3.setPointSize(14)
+        font3.setBold(False)
+        self.menubar.setFont(font3)
         self.menubar.setStyleSheet(u"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 235, 235, 206), stop:0.136364 rgba(255, 188, 188, 80), stop:0.329545 rgba(255, 162, 162, 80), stop:0.477273 rgba(255, 132, 132, 156), stop:0.897727 rgba(203, 48, 185, 80));")
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
@@ -579,6 +593,13 @@ class Ui_MainWindow(object):
         self.Column_box.setTitle(QCoreApplication.translate("MainWindow", u"Column", None))
         self.Open_img_btn.setText(QCoreApplication.translate("MainWindow", u"Open image", None))
         self.Row_box.setTitle(QCoreApplication.translate("MainWindow", u"Row", None))
+        self.info_textbox.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"hr { height: 1px; border-width: 0; }\n"
+"</style></head><body style=\" font-family:'Arial'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:700; color:#45aa9b;\">CCD View Process Program</span></p>\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:700; color:#45aa9b;\"><br /></p></body></html>", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuanalysise.setTitle(QCoreApplication.translate("MainWindow", u"Analysis", None))
         self.menuView.setTitle(QCoreApplication.translate("MainWindow", u"View", None))
