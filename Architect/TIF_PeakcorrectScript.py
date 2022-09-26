@@ -77,7 +77,7 @@ def save_raw_img(raw_matrix:np.array([]),img_file:str):
     plt.text(0.0, 0.5, s=f'Image file: {img_file}',color = "m", transform=ax4.transAxes,fontsize=15)
     plt.savefig(img_file)
 
-def Gaussian_FWHM(x,y,center=1200,index=1,info='FWHM-fit'):
+def Gaussian_FWHM(x,y,center=1200,index=1,filename:str='FWHM-fit',save_folder:str=os.getcwd()):
     """find FWHM from the imported pd_data [x,y]
 
     Args:
@@ -223,7 +223,7 @@ def Fit_peak_data(img_matrix:np.asarray([]),p_col:int,half_n:int,save_folder:str
     FWHM_results={}
     for i in range(10):
         y_correct=pd_data.values[:, i+1]
-        FWHM,FWHM_err=Gaussian_FWHM(x_correct,y_correct,center=p_col,index=(i-5))
+        FWHM,FWHM_err=Gaussian_FWHM(x_correct,y_correct,center=p_col,index=(i-5),filename=filename,save_folder=save_folder)
         print(f'fit-{i}:{FWHM:.4f},{FWHM_err}\n')
         FWHM_results[f'FitGauss{i}']=(FWHM,FWHM_err)
     for key,value in FWHM_results.items():
