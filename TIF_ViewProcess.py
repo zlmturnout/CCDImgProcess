@@ -36,6 +36,7 @@ from Architect.TIF_PeakcorrectScript import Fit_peak_data
 # save path info
 save_path = os.path.join(os.getcwd(), 'save_img')
 creatPath(save_path)
+today_folder=creatPath(os.path.join(save_path,time.strftime("%Y-%m-%d", time.localtime())))
 log_path = os.path.join(os.getcwd(), 'log_info')
 creatPath(log_path)
 
@@ -112,14 +113,18 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         filename, filetype = QFileDialog.getOpenFileName(self, "open measured tif data file(supported 16bit TIF)",
                                                          self.file_folder, '*.tif')
         print(filename, filetype)
-        # save corrected_list data
+        # save raw image datainfo
         self.file_folder,file=os.path.split(filename)
         self.file_title,extension=os.path.splitext(file)
+        
         if os.path.isfile(filename) and filename.endswith('.tif'):
             img = Image.open(filename)
             #matrix = np.array(img,dtype=np.float32)
             img_data = np.array(img,dtype=np.float32)
             print(f'shape of the read img={np.shape(img_data)}')
+            # save raw image info
+            rawinfo_file=os.path.join(self.file_folder,f'RawImg-{self.file_title}.jpg')
+            self.save_raw_img(img_data,rawinfo_file)
         return filename, img_data
 
     def save_tif_data(self,img_data:np.array([]),tif_file:str):
@@ -152,6 +157,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
     def newTif(self):
         self.Main_img_data=np.array([])
         filename,self.Main_img_data=self.open_tif_img()
+        
         self.IMG_path_text.setText(f'{filename}')
         # img threshold bar
         I_min,I_max=self.get_I_range(self.Main_img_data)
@@ -233,6 +239,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         find the corrected width of RIXS line from the input image
         :return:
         """
+          
         if not self.Sub_img_data.size==0:
             Fit_peak_data(self.Sub_img_data,self.peak_col,self.half_n,self.file_folder,self.file_title)
         else:
@@ -659,6 +666,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             # plot the raw image
         fig = plt.figure(figsize =(16, 9))
         fig.canvas.manager.window.setWindowTitle("Visualize raw image")
+        ax4=plt.subplot(2,2,4)
         plt.subplot(2,2,1),plt.imshow(raw_matrix,cmap=cm.rainbow,vmin=1300,vmax=1400)
         plt.colorbar(location='right', fraction=0.1),plt.title("raw image")
         sum_rows_raw=np.sum(raw_matrix,axis=0)
@@ -667,6 +675,10 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         col_index=[j for j in range(len(sum_cols_raw)) ]
         plt.subplot(2,2,3),plt.plot(row_index,sum_rows_raw),plt.title("sum cols")
         plt.subplot(2,2,2),plt.plot(col_index,sum_cols_raw),plt.title("sum rows")
+        #save by filename
+        folderpath,file=os.path.split(img_file)
+        filename,extension=os.path.splitext(file)
+        plt.text(0, 0.5, s=f'Image file:\n{filename}',color = "m", transform=ax4.transAxes,fontsize=15)
         plt.savefig(img_file)
 
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************

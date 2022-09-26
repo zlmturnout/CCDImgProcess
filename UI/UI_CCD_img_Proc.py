@@ -27,27 +27,29 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1200, 950)
+        MainWindow.resize(1200, 900)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMinimumSize(QSize(1200, 950))
+        MainWindow.setMinimumSize(QSize(1200, 850))
         MainWindow.setTabShape(QTabWidget.Triangular)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_3 = QGridLayout(self.centralwidget)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.verticalLayout_6 = QVBoxLayout()
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.toolBox = QToolBox(self.centralwidget)
         self.toolBox.setObjectName(u"toolBox")
         sizePolicy.setHeightForWidth(self.toolBox.sizePolicy().hasHeightForWidth())
         self.toolBox.setSizePolicy(sizePolicy)
-        self.toolBox.setMinimumSize(QSize(300, 300))
+        self.toolBox.setMinimumSize(QSize(300, 250))
         self.toolBox.setMaximumSize(QSize(300, 16777215))
         font = QFont()
         font.setFamilies([u"Arial"])
@@ -58,7 +60,7 @@ class Ui_MainWindow(object):
         self.toolBox.setAutoFillBackground(False)
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 300, 253))
+        self.page.setGeometry(QRect(0, 0, 300, 319))
         self.gridLayout_2 = QGridLayout(self.page)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.Refresh_tool = QPushButton(self.page)
@@ -170,7 +172,7 @@ class Ui_MainWindow(object):
         self.toolBox.addItem(self.page, u"Tools")
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
-        self.page_2.setGeometry(QRect(0, 0, 300, 253))
+        self.page_2.setGeometry(QRect(0, 0, 300, 319))
         self.gridLayout_7 = QGridLayout(self.page_2)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.verticalLayout_3 = QVBoxLayout()
@@ -228,7 +230,7 @@ class Ui_MainWindow(object):
         self.groupBox.setObjectName(u"groupBox")
         sizePolicy1.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
         self.groupBox.setSizePolicy(sizePolicy1)
-        self.groupBox.setMinimumSize(QSize(300, 200))
+        self.groupBox.setMinimumSize(QSize(300, 180))
         self.gridLayout = QGridLayout(self.groupBox)
         self.gridLayout.setObjectName(u"gridLayout")
         self.Imax_Slider = QSlider(self.groupBox)
@@ -336,46 +338,13 @@ class Ui_MainWindow(object):
         self.Sub_box.setObjectName(u"Sub_box")
         sizePolicy1.setHeightForWidth(self.Sub_box.sizePolicy().hasHeightForWidth())
         self.Sub_box.setSizePolicy(sizePolicy1)
-        self.Sub_box.setMinimumSize(QSize(300, 300))
+        self.Sub_box.setMinimumSize(QSize(300, 200))
         self.Sub_box.setMaximumSize(QSize(300, 300))
 
         self.verticalLayout.addWidget(self.Sub_box)
 
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.Save_ROI_btn = QPushButton(self.centralwidget)
-        self.Save_ROI_btn.setObjectName(u"Save_ROI_btn")
-        sizePolicy1.setHeightForWidth(self.Save_ROI_btn.sizePolicy().hasHeightForWidth())
-        self.Save_ROI_btn.setSizePolicy(sizePolicy1)
-        self.Save_ROI_btn.setMinimumSize(QSize(120, 40))
-        self.Save_ROI_btn.setFont(font)
-        self.Save_ROI_btn.setStyleSheet(u"background-color: rgb(255, 110, 43);\n"
-"border-bottom-color: rgb(139, 139, 139);\n"
-"border-right-color: rgb(48, 48, 48);\n"
-"selection-color: rgb(255, 85, 127);\n"
-"color: rgb(255, 255, 255);")
 
-        self.horizontalLayout_2.addWidget(self.Save_ROI_btn)
-
-        self.AutoCorrection_btn = QPushButton(self.centralwidget)
-        self.AutoCorrection_btn.setObjectName(u"AutoCorrection_btn")
-        sizePolicy1.setHeightForWidth(self.AutoCorrection_btn.sizePolicy().hasHeightForWidth())
-        self.AutoCorrection_btn.setSizePolicy(sizePolicy1)
-        self.AutoCorrection_btn.setMinimumSize(QSize(120, 40))
-        self.AutoCorrection_btn.setFont(font)
-        self.AutoCorrection_btn.setStyleSheet(u"background-color: rgb(0, 170, 255);\n"
-"border-bottom-color: rgb(139, 139, 139);\n"
-"border-right-color: rgb(48, 48, 48);\n"
-"selection-color: rgb(255, 85, 127);\n"
-"color: rgb(255, 255, 255);")
-
-        self.horizontalLayout_2.addWidget(self.AutoCorrection_btn)
-
-
-        self.verticalLayout.addLayout(self.horizontalLayout_2)
-
-
-        self.horizontalLayout_4.addLayout(self.verticalLayout)
+        self.horizontalLayout_5.addLayout(self.verticalLayout)
 
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -428,7 +397,6 @@ class Ui_MainWindow(object):
         font1.setItalic(True)
         self.IMG_path_text.setFont(font1)
         self.IMG_path_text.setStyleSheet(u"background-color: rgb(202, 202, 202);\n"
-"border-size:5px;\n"
 "selection-color: rgb(255, 85, 127);\n"
 "color: rgb(255, 102, 143);")
         self.IMG_path_text.setAlignment(Qt.AlignCenter)
@@ -437,7 +405,7 @@ class Ui_MainWindow(object):
 
         self.Main_fig_box = QGroupBox(self.centralwidget)
         self.Main_fig_box.setObjectName(u"Main_fig_box")
-        self.Main_fig_box.setMinimumSize(QSize(600, 600))
+        self.Main_fig_box.setMinimumSize(QSize(600, 400))
         self.Main_fig_box.setCursor(QCursor(Qt.CrossCursor))
 
         self.verticalLayout_2.addWidget(self.Main_fig_box)
@@ -453,23 +421,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.Column_box)
 
-        self.horizontalLayout_5 = QHBoxLayout()
-        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.horizontalSpacer_2 = QSpacerItem(308, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
-        self.horizontalLayout_5.addItem(self.horizontalSpacer_2)
-
-        self.progressBar = QProgressBar(self.centralwidget)
-        self.progressBar.setObjectName(u"progressBar")
-        self.progressBar.setValue(24)
-
-        self.horizontalLayout_5.addWidget(self.progressBar)
-
-
-        self.verticalLayout_2.addLayout(self.horizontalLayout_5)
-
-
-        self.horizontalLayout_4.addLayout(self.verticalLayout_2)
+        self.horizontalLayout_5.addLayout(self.verticalLayout_2)
 
         self.verticalLayout_5 = QVBoxLayout()
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -493,7 +446,7 @@ class Ui_MainWindow(object):
         self.Row_box.setObjectName(u"Row_box")
         sizePolicy.setHeightForWidth(self.Row_box.sizePolicy().hasHeightForWidth())
         self.Row_box.setSizePolicy(sizePolicy)
-        self.Row_box.setMinimumSize(QSize(200, 800))
+        self.Row_box.setMinimumSize(QSize(200, 600))
         self.Row_box.setLayoutDirection(Qt.LeftToRight)
 
         self.verticalLayout_4.addWidget(self.Row_box)
@@ -509,24 +462,73 @@ class Ui_MainWindow(object):
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.info_textbox.sizePolicy().hasHeightForWidth())
         self.info_textbox.setSizePolicy(sizePolicy3)
-        self.info_textbox.setMinimumSize(QSize(200, 120))
-        self.info_textbox.setMaximumSize(QSize(200, 16777215))
+        self.info_textbox.setMinimumSize(QSize(200, 100))
+        self.info_textbox.setMaximumSize(QSize(200, 300))
         font2 = QFont()
         font2.setFamilies([u"Arial"])
         font2.setPointSize(10)
         self.info_textbox.setFont(font2)
+        self.info_textbox.setAcceptDrops(True)
+        self.info_textbox.setReadOnly(True)
 
         self.verticalLayout_5.addWidget(self.info_textbox)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.verticalLayout_5.addItem(self.verticalSpacer)
-
-
-        self.horizontalLayout_4.addLayout(self.verticalLayout_5)
+        self.horizontalLayout_5.addLayout(self.verticalLayout_5)
 
 
-        self.gridLayout_3.addLayout(self.horizontalLayout_4, 0, 0, 1, 1)
+        self.verticalLayout_6.addLayout(self.horizontalLayout_5)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.Save_ROI_btn = QPushButton(self.centralwidget)
+        self.Save_ROI_btn.setObjectName(u"Save_ROI_btn")
+        sizePolicy1.setHeightForWidth(self.Save_ROI_btn.sizePolicy().hasHeightForWidth())
+        self.Save_ROI_btn.setSizePolicy(sizePolicy1)
+        self.Save_ROI_btn.setMinimumSize(QSize(120, 40))
+        self.Save_ROI_btn.setFont(font)
+        self.Save_ROI_btn.setStyleSheet(u"background-color: rgb(255, 110, 43);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.horizontalLayout_2.addWidget(self.Save_ROI_btn)
+
+        self.AutoCorrection_btn = QPushButton(self.centralwidget)
+        self.AutoCorrection_btn.setObjectName(u"AutoCorrection_btn")
+        sizePolicy1.setHeightForWidth(self.AutoCorrection_btn.sizePolicy().hasHeightForWidth())
+        self.AutoCorrection_btn.setSizePolicy(sizePolicy1)
+        self.AutoCorrection_btn.setMinimumSize(QSize(120, 40))
+        self.AutoCorrection_btn.setFont(font)
+        self.AutoCorrection_btn.setStyleSheet(u"background-color: rgb(0, 170, 255);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.horizontalLayout_2.addWidget(self.AutoCorrection_btn)
+
+
+        self.horizontalLayout_4.addLayout(self.horizontalLayout_2)
+
+        self.horizontalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
+
+        self.progressBar = QProgressBar(self.centralwidget)
+        self.progressBar.setObjectName(u"progressBar")
+        self.progressBar.setValue(24)
+
+        self.horizontalLayout_4.addWidget(self.progressBar)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_4)
+
+
+        self.gridLayout_3.addLayout(self.verticalLayout_6, 0, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -585,8 +587,6 @@ class Ui_MainWindow(object):
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Max", None))
         self.Imax_text.setText(QCoreApplication.translate("MainWindow", u"1400", None))
         self.Sub_box.setTitle(QCoreApplication.translate("MainWindow", u"ROI", None))
-        self.Save_ROI_btn.setText(QCoreApplication.translate("MainWindow", u"Save ROI", None))
-        self.AutoCorrection_btn.setText(QCoreApplication.translate("MainWindow", u"AutoCorrection", None))
         self.IMG_path_text.setText("")
         self.IMG_path_text.setPlaceholderText(QCoreApplication.translate("MainWindow", u"path", None))
         self.Main_fig_box.setTitle(QCoreApplication.translate("MainWindow", u"MainFigure", None))
@@ -600,6 +600,8 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:'Arial'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:700; color:#45aa9b;\">CCD View Process Program</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:700; color:#45aa9b;\"><br /></p></body></html>", None))
+        self.Save_ROI_btn.setText(QCoreApplication.translate("MainWindow", u"Save ROI", None))
+        self.AutoCorrection_btn.setText(QCoreApplication.translate("MainWindow", u"AutoCorrection", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuanalysise.setTitle(QCoreApplication.translate("MainWindow", u"Analysis", None))
         self.menuView.setTitle(QCoreApplication.translate("MainWindow", u"View", None))

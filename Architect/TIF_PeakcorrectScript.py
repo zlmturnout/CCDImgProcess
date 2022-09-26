@@ -56,25 +56,28 @@ def gaussian(x, amp, cen, wid):
     return (amp / (sqrt(2*pi) * wid)) * exp(-(x-cen)**2 / (2*wid**2))
 
 def save_raw_img(raw_matrix:np.array([]),img_file:str):
-        """
+    """
 
-        Args:
-            raw_img_data (np.array): _description_
-        """
-            # plot the raw image
-        fig = plt.figure(figsize =(16, 9))
-        fig.canvas.manager.window.setWindowTitle("Visualize raw image")
-        plt.subplot(2,2,1),plt.imshow(raw_matrix,cmap=cm.rainbow,vmin=1300,vmax=1400)
-        plt.colorbar(location='right', fraction=0.1),plt.title("raw image")
-        sum_rows_raw=np.sum(raw_matrix,axis=0)
-        row_index=[i for i in range(len(sum_rows_raw)) ]
-        sum_cols_raw=np.sum(raw_matrix,axis=1)
-        col_index=[j for j in range(len(sum_cols_raw)) ]
-        plt.subplot(2,2,3),plt.plot(row_index,sum_rows_raw),plt.title("sum cols")
-        plt.subplot(2,2,2),plt.plot(col_index,sum_cols_raw),plt.title("sum rows")
-        plt.savefig(img_file)
+    Args:
+        raw_img_data (np.array): _description_
+    """
+    # plot the raw image
+    fig = plt.figure(figsize =(16, 9))
+    fig.canvas.manager.window.setWindowTitle("Visualize raw image")
+    
+    plt.subplot(2,2,1),plt.imshow(raw_matrix,cmap=cm.rainbow,vmin=1300,vmax=1400)
+    plt.colorbar(location='right', fraction=0.1),plt.title("raw image")
+    sum_rows_raw=np.sum(raw_matrix,axis=0)
+    row_index=[i for i in range(len(sum_rows_raw)) ]
+    sum_cols_raw=np.sum(raw_matrix,axis=1)
+    col_index=[j for j in range(len(sum_cols_raw)) ]
+    plt.subplot(2,2,3),plt.plot(row_index,sum_rows_raw),plt.title("sum cols")
+    plt.subplot(2,2,2),plt.plot(col_index,sum_cols_raw),plt.title("sum rows")
+    ax4=plt.subplots(2,2,4)
+    plt.text(0.0, 0.5, s=f'Image file: {img_file}',color = "m", transform=ax4.transAxes,fontsize=15)
+    plt.savefig(img_file)
 
-def Gaussian_FWHM(x,y,center=1200,index=1):
+def Gaussian_FWHM(x,y,center=1200,index=1,info='FWHM-fit'):
     """find FWHM from the imported pd_data [x,y]
 
     Args:
@@ -113,6 +116,8 @@ def Gaussian_FWHM(x,y,center=1200,index=1):
     plt.text(0.5, 0.5, s=cen_text+wid_text+FWHW_text,color = "m", transform=ax.transAxes,fontsize=15)
     plt.text(0.5, 1.0, s=f'Gauss FIt-{index}',color = "m", transform=ax.transAxes,fontsize=15)
     plt.legend()
+    save_fig=os.path.join(save_folder,f'FWHM_fit-{filename}-{index}.jpg')
+    plt.savefig(save_fig)
     return FWHM,FWHM_err
 
 def shift_pixel(index:int,j:int=1):
@@ -174,6 +179,8 @@ def Fit_peak_data(img_matrix:np.asarray([]),p_col:int,half_n:int,save_folder:str
     sum_cols_cut=np.sum(cor_matrix.T,axis=1)
     col_index=[j for j in range(len(sum_cols_cut)) ]
     plt.subplot(3,3,9),plt.plot(col_index,sum_cols_cut),plt.title("sum cols")
+    save_fig=os.path.join(save_folder,f'imageDataPreprocess-{filename}.jpg')
+    plt.savefig(save_fig)
     # fit new data
     new_img = np.zeros((row,column))
     corrected_list=[]
@@ -199,6 +206,8 @@ def Fit_peak_data(img_matrix:np.asarray([]),p_col:int,half_n:int,save_folder:str
             plt.title("correction via shift right+")
             plt.pause(0.1)
         plt.legend([i for i in range(10)])
+    save_fig=os.path.join(save_folder,f'Visualize peak correction-{filename}.jpg')
+    plt.savefig(save_fig)
 
     # save corrected_list data
     #corr_datafile=os.path.join(save_folder,f'Peakcorrected_half_n1196-2_square200-{half_n}-{filename}.xlsx')
