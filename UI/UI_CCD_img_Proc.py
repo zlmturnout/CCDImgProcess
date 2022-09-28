@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1200, 900)
+        MainWindow.resize(1428, 900)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -39,10 +39,12 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout_3 = QGridLayout(self.centralwidget)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.verticalLayout_6 = QVBoxLayout()
-        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.verticalLayout_6 = QVBoxLayout()
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.toolBox = QToolBox(self.centralwidget)
@@ -60,7 +62,7 @@ class Ui_MainWindow(object):
         self.toolBox.setAutoFillBackground(False)
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 300, 319))
+        self.page.setGeometry(QRect(0, 0, 300, 301))
         self.gridLayout_2 = QGridLayout(self.page)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.Refresh_tool = QPushButton(self.page)
@@ -172,7 +174,7 @@ class Ui_MainWindow(object):
         self.toolBox.addItem(self.page, u"Tools")
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
-        self.page_2.setGeometry(QRect(0, 0, 300, 319))
+        self.page_2.setGeometry(QRect(0, 0, 300, 301))
         self.gridLayout_7 = QGridLayout(self.page_2)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.verticalLayout_3 = QVBoxLayout()
@@ -230,25 +232,14 @@ class Ui_MainWindow(object):
         self.groupBox.setObjectName(u"groupBox")
         sizePolicy1.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
         self.groupBox.setSizePolicy(sizePolicy1)
-        self.groupBox.setMinimumSize(QSize(300, 180))
+        self.groupBox.setMinimumSize(QSize(300, 150))
         self.gridLayout = QGridLayout(self.groupBox)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.Imax_Slider = QSlider(self.groupBox)
-        self.Imax_Slider.setObjectName(u"Imax_Slider")
-        sizePolicy1.setHeightForWidth(self.Imax_Slider.sizePolicy().hasHeightForWidth())
-        self.Imax_Slider.setSizePolicy(sizePolicy1)
-        self.Imax_Slider.setMinimumSize(QSize(280, 25))
-        self.Imax_Slider.setOrientation(Qt.Horizontal)
-
-        self.gridLayout.addWidget(self.Imax_Slider, 3, 0, 1, 1)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.label = QLabel(self.groupBox)
         self.label.setObjectName(u"label")
         sizePolicy1.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy1)
-        self.label.setMinimumSize(QSize(60, 30))
+        self.label.setMinimumSize(QSize(40, 40))
         self.label.setMaximumSize(QSize(35, 25))
         palette = QPalette()
         brush = QBrush(QColor(255, 85, 0, 255))
@@ -270,28 +261,24 @@ class Ui_MainWindow(object):
         self.label.setFont(font)
         self.label.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.label)
+        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
 
         self.Imin_text = QLineEdit(self.groupBox)
         self.Imin_text.setObjectName(u"Imin_text")
         sizePolicy1.setHeightForWidth(self.Imin_text.sizePolicy().hasHeightForWidth())
         self.Imin_text.setSizePolicy(sizePolicy1)
-        self.Imin_text.setMinimumSize(QSize(80, 30))
+        self.Imin_text.setMinimumSize(QSize(80, 40))
         self.Imin_text.setMaximumSize(QSize(60, 25))
         self.Imin_text.setFont(font)
+        self.Imin_text.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.Imin_text)
+        self.gridLayout.addWidget(self.Imin_text, 0, 1, 1, 1)
 
-
-        self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
-
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.label_2 = QLabel(self.groupBox)
         self.label_2.setObjectName(u"label_2")
         sizePolicy1.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
         self.label_2.setSizePolicy(sizePolicy1)
-        self.label_2.setMinimumSize(QSize(60, 30))
+        self.label_2.setMinimumSize(QSize(40, 40))
         self.label_2.setMaximumSize(QSize(35, 25))
         palette1 = QPalette()
         palette1.setBrush(QPalette.Active, QPalette.WindowText, brush)
@@ -307,20 +294,18 @@ class Ui_MainWindow(object):
         self.label_2.setFont(font)
         self.label_2.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_3.addWidget(self.label_2)
+        self.gridLayout.addWidget(self.label_2, 0, 2, 1, 1)
 
         self.Imax_text = QLineEdit(self.groupBox)
         self.Imax_text.setObjectName(u"Imax_text")
         sizePolicy1.setHeightForWidth(self.Imax_text.sizePolicy().hasHeightForWidth())
         self.Imax_text.setSizePolicy(sizePolicy1)
-        self.Imax_text.setMinimumSize(QSize(80, 30))
+        self.Imax_text.setMinimumSize(QSize(80, 40))
         self.Imax_text.setMaximumSize(QSize(60, 25))
         self.Imax_text.setFont(font)
+        self.Imax_text.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_3.addWidget(self.Imax_text)
-
-
-        self.gridLayout.addLayout(self.horizontalLayout_3, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.Imax_text, 0, 3, 1, 1)
 
         self.Imin_Slider = QSlider(self.groupBox)
         self.Imin_Slider.setObjectName(u"Imin_Slider")
@@ -329,7 +314,16 @@ class Ui_MainWindow(object):
         self.Imin_Slider.setMinimumSize(QSize(280, 25))
         self.Imin_Slider.setOrientation(Qt.Horizontal)
 
-        self.gridLayout.addWidget(self.Imin_Slider, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.Imin_Slider, 1, 0, 1, 4)
+
+        self.Imax_Slider = QSlider(self.groupBox)
+        self.Imax_Slider.setObjectName(u"Imax_Slider")
+        sizePolicy1.setHeightForWidth(self.Imax_Slider.sizePolicy().hasHeightForWidth())
+        self.Imax_Slider.setSizePolicy(sizePolicy1)
+        self.Imax_Slider.setMinimumSize(QSize(280, 25))
+        self.Imax_Slider.setOrientation(Qt.Horizontal)
+
+        self.gridLayout.addWidget(self.Imax_Slider, 2, 0, 1, 4)
 
 
         self.verticalLayout.addWidget(self.groupBox)
@@ -343,8 +337,60 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.Sub_box)
 
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.label_3 = QLabel(self.centralwidget)
+        self.label_3.setObjectName(u"label_3")
+        sizePolicy1.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy1)
+        self.label_3.setMinimumSize(QSize(60, 40))
+        self.label_3.setMaximumSize(QSize(35, 40))
+        palette2 = QPalette()
+        palette2.setBrush(QPalette.Active, QPalette.WindowText, brush)
+        palette2.setBrush(QPalette.Active, QPalette.Text, brush)
+        palette2.setBrush(QPalette.Active, QPalette.ButtonText, brush)
+        palette2.setBrush(QPalette.Inactive, QPalette.WindowText, brush1)
+        palette2.setBrush(QPalette.Inactive, QPalette.Text, brush1)
+        palette2.setBrush(QPalette.Inactive, QPalette.ButtonText, brush1)
+        palette2.setBrush(QPalette.Disabled, QPalette.WindowText, brush2)
+        palette2.setBrush(QPalette.Disabled, QPalette.Text, brush2)
+        palette2.setBrush(QPalette.Disabled, QPalette.ButtonText, brush2)
+        self.label_3.setPalette(palette2)
+        self.label_3.setFont(font)
+        self.label_3.setAlignment(Qt.AlignCenter)
 
-        self.horizontalLayout_5.addLayout(self.verticalLayout)
+        self.horizontalLayout.addWidget(self.label_3)
+
+        self.Slice_input = QLineEdit(self.centralwidget)
+        self.Slice_input.setObjectName(u"Slice_input")
+        sizePolicy1.setHeightForWidth(self.Slice_input.sizePolicy().hasHeightForWidth())
+        self.Slice_input.setSizePolicy(sizePolicy1)
+        self.Slice_input.setMinimumSize(QSize(80, 40))
+        self.Slice_input.setMaximumSize(QSize(60, 40))
+        self.Slice_input.setFont(font)
+        self.Slice_input.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout.addWidget(self.Slice_input)
+
+        self.Save_ROI_btn = QPushButton(self.centralwidget)
+        self.Save_ROI_btn.setObjectName(u"Save_ROI_btn")
+        sizePolicy1.setHeightForWidth(self.Save_ROI_btn.sizePolicy().hasHeightForWidth())
+        self.Save_ROI_btn.setSizePolicy(sizePolicy1)
+        self.Save_ROI_btn.setMinimumSize(QSize(120, 40))
+        self.Save_ROI_btn.setFont(font)
+        self.Save_ROI_btn.setStyleSheet(u"background-color: rgb(255, 110, 43);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.horizontalLayout.addWidget(self.Save_ROI_btn)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout)
+
+
+        self.horizontalLayout_3.addLayout(self.verticalLayout)
 
         self.verticalLayout_2 = QVBoxLayout()
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -352,44 +398,44 @@ class Ui_MainWindow(object):
         self.IMG_path_text.setObjectName(u"IMG_path_text")
         self.IMG_path_text.setMinimumSize(QSize(600, 40))
         self.IMG_path_text.setMaximumSize(QSize(2160, 40))
-        palette2 = QPalette()
+        palette3 = QPalette()
         brush3 = QBrush(QColor(255, 102, 143, 255))
         brush3.setStyle(Qt.SolidPattern)
-        palette2.setBrush(QPalette.Active, QPalette.WindowText, brush3)
+        palette3.setBrush(QPalette.Active, QPalette.WindowText, brush3)
         brush4 = QBrush(QColor(202, 202, 202, 255))
         brush4.setStyle(Qt.SolidPattern)
-        palette2.setBrush(QPalette.Active, QPalette.Button, brush4)
-        palette2.setBrush(QPalette.Active, QPalette.Text, brush3)
-        palette2.setBrush(QPalette.Active, QPalette.ButtonText, brush3)
-        palette2.setBrush(QPalette.Active, QPalette.Base, brush4)
-        palette2.setBrush(QPalette.Active, QPalette.Window, brush4)
+        palette3.setBrush(QPalette.Active, QPalette.Button, brush4)
+        palette3.setBrush(QPalette.Active, QPalette.Text, brush3)
+        palette3.setBrush(QPalette.Active, QPalette.ButtonText, brush3)
+        palette3.setBrush(QPalette.Active, QPalette.Base, brush4)
+        palette3.setBrush(QPalette.Active, QPalette.Window, brush4)
         brush5 = QBrush(QColor(255, 85, 127, 255))
         brush5.setStyle(Qt.SolidPattern)
-        palette2.setBrush(QPalette.Active, QPalette.HighlightedText, brush5)
+        palette3.setBrush(QPalette.Active, QPalette.HighlightedText, brush5)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette.Active, QPalette.PlaceholderText, brush3)
+        palette3.setBrush(QPalette.Active, QPalette.PlaceholderText, brush3)
 #endif
-        palette2.setBrush(QPalette.Inactive, QPalette.WindowText, brush3)
-        palette2.setBrush(QPalette.Inactive, QPalette.Button, brush4)
-        palette2.setBrush(QPalette.Inactive, QPalette.Text, brush3)
-        palette2.setBrush(QPalette.Inactive, QPalette.ButtonText, brush3)
-        palette2.setBrush(QPalette.Inactive, QPalette.Base, brush4)
-        palette2.setBrush(QPalette.Inactive, QPalette.Window, brush4)
-        palette2.setBrush(QPalette.Inactive, QPalette.HighlightedText, brush5)
+        palette3.setBrush(QPalette.Inactive, QPalette.WindowText, brush3)
+        palette3.setBrush(QPalette.Inactive, QPalette.Button, brush4)
+        palette3.setBrush(QPalette.Inactive, QPalette.Text, brush3)
+        palette3.setBrush(QPalette.Inactive, QPalette.ButtonText, brush3)
+        palette3.setBrush(QPalette.Inactive, QPalette.Base, brush4)
+        palette3.setBrush(QPalette.Inactive, QPalette.Window, brush4)
+        palette3.setBrush(QPalette.Inactive, QPalette.HighlightedText, brush5)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush3)
+        palette3.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush3)
 #endif
-        palette2.setBrush(QPalette.Disabled, QPalette.WindowText, brush3)
-        palette2.setBrush(QPalette.Disabled, QPalette.Button, brush4)
-        palette2.setBrush(QPalette.Disabled, QPalette.Text, brush3)
-        palette2.setBrush(QPalette.Disabled, QPalette.ButtonText, brush3)
-        palette2.setBrush(QPalette.Disabled, QPalette.Base, brush4)
-        palette2.setBrush(QPalette.Disabled, QPalette.Window, brush4)
-        palette2.setBrush(QPalette.Disabled, QPalette.HighlightedText, brush5)
+        palette3.setBrush(QPalette.Disabled, QPalette.WindowText, brush3)
+        palette3.setBrush(QPalette.Disabled, QPalette.Button, brush4)
+        palette3.setBrush(QPalette.Disabled, QPalette.Text, brush3)
+        palette3.setBrush(QPalette.Disabled, QPalette.ButtonText, brush3)
+        palette3.setBrush(QPalette.Disabled, QPalette.Base, brush4)
+        palette3.setBrush(QPalette.Disabled, QPalette.Window, brush4)
+        palette3.setBrush(QPalette.Disabled, QPalette.HighlightedText, brush5)
 #if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
-        palette2.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush3)
+        palette3.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush3)
 #endif
-        self.IMG_path_text.setPalette(palette2)
+        self.IMG_path_text.setPalette(palette3)
         font1 = QFont()
         font1.setFamilies([u"Arial"])
         font1.setPointSize(10)
@@ -422,7 +468,61 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.Column_box)
 
 
-        self.horizontalLayout_5.addLayout(self.verticalLayout_2)
+        self.horizontalLayout_3.addLayout(self.verticalLayout_2)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_3)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+
+        self.horizontalLayout_4.addLayout(self.horizontalLayout_2)
+
+        self.horizontalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
+
+        self.Slice_correction_btn = QPushButton(self.centralwidget)
+        self.Slice_correction_btn.setObjectName(u"Slice_correction_btn")
+        sizePolicy1.setHeightForWidth(self.Slice_correction_btn.sizePolicy().hasHeightForWidth())
+        self.Slice_correction_btn.setSizePolicy(sizePolicy1)
+        self.Slice_correction_btn.setMinimumSize(QSize(120, 40))
+        self.Slice_correction_btn.setFont(font)
+        self.Slice_correction_btn.setStyleSheet(u"background-color: rgb(255, 110, 43);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.horizontalLayout_4.addWidget(self.Slice_correction_btn)
+
+        self.AutoCorrection_btn = QPushButton(self.centralwidget)
+        self.AutoCorrection_btn.setObjectName(u"AutoCorrection_btn")
+        sizePolicy1.setHeightForWidth(self.AutoCorrection_btn.sizePolicy().hasHeightForWidth())
+        self.AutoCorrection_btn.setSizePolicy(sizePolicy1)
+        self.AutoCorrection_btn.setMinimumSize(QSize(120, 40))
+        self.AutoCorrection_btn.setFont(font)
+        self.AutoCorrection_btn.setStyleSheet(u"background-color: rgb(0, 170, 255);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.horizontalLayout_4.addWidget(self.AutoCorrection_btn)
+
+        self.progressBar = QProgressBar(self.centralwidget)
+        self.progressBar.setObjectName(u"progressBar")
+        self.progressBar.setValue(24)
+
+        self.horizontalLayout_4.addWidget(self.progressBar)
+
+
+        self.verticalLayout_6.addLayout(self.horizontalLayout_4)
+
+
+        self.horizontalLayout_5.addLayout(self.verticalLayout_6)
 
         self.verticalLayout_5 = QVBoxLayout()
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
@@ -477,63 +577,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.addLayout(self.verticalLayout_5)
 
 
-        self.verticalLayout_6.addLayout(self.horizontalLayout_5)
-
-        self.horizontalLayout_4 = QHBoxLayout()
-        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-        self.horizontalLayout_2 = QHBoxLayout()
-        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.Save_ROI_btn = QPushButton(self.centralwidget)
-        self.Save_ROI_btn.setObjectName(u"Save_ROI_btn")
-        sizePolicy1.setHeightForWidth(self.Save_ROI_btn.sizePolicy().hasHeightForWidth())
-        self.Save_ROI_btn.setSizePolicy(sizePolicy1)
-        self.Save_ROI_btn.setMinimumSize(QSize(120, 40))
-        self.Save_ROI_btn.setFont(font)
-        self.Save_ROI_btn.setStyleSheet(u"background-color: rgb(255, 110, 43);\n"
-"border-bottom-color: rgb(139, 139, 139);\n"
-"border-right-color: rgb(48, 48, 48);\n"
-"selection-color: rgb(255, 85, 127);\n"
-"color: rgb(255, 255, 255);")
-
-        self.horizontalLayout_2.addWidget(self.Save_ROI_btn)
-
-        self.AutoCorrection_btn = QPushButton(self.centralwidget)
-        self.AutoCorrection_btn.setObjectName(u"AutoCorrection_btn")
-        sizePolicy1.setHeightForWidth(self.AutoCorrection_btn.sizePolicy().hasHeightForWidth())
-        self.AutoCorrection_btn.setSizePolicy(sizePolicy1)
-        self.AutoCorrection_btn.setMinimumSize(QSize(120, 40))
-        self.AutoCorrection_btn.setFont(font)
-        self.AutoCorrection_btn.setStyleSheet(u"background-color: rgb(0, 170, 255);\n"
-"border-bottom-color: rgb(139, 139, 139);\n"
-"border-right-color: rgb(48, 48, 48);\n"
-"selection-color: rgb(255, 85, 127);\n"
-"color: rgb(255, 255, 255);")
-
-        self.horizontalLayout_2.addWidget(self.AutoCorrection_btn)
-
-
-        self.horizontalLayout_4.addLayout(self.horizontalLayout_2)
-
-        self.horizontalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
-
-        self.progressBar = QProgressBar(self.centralwidget)
-        self.progressBar.setObjectName(u"progressBar")
-        self.progressBar.setValue(24)
-
-        self.horizontalLayout_4.addWidget(self.progressBar)
-
-
-        self.verticalLayout_6.addLayout(self.horizontalLayout_4)
-
-
-        self.gridLayout_3.addLayout(self.verticalLayout_6, 0, 0, 1, 1)
+        self.gridLayout_3.addLayout(self.horizontalLayout_5, 0, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1200, 31))
+        self.menubar.setGeometry(QRect(0, 0, 1428, 31))
         font3 = QFont()
         font3.setPointSize(14)
         font3.setBold(False)
@@ -587,10 +636,15 @@ class Ui_MainWindow(object):
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Max", None))
         self.Imax_text.setText(QCoreApplication.translate("MainWindow", u"1400", None))
         self.Sub_box.setTitle(QCoreApplication.translate("MainWindow", u"ROI", None))
+        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Slice", None))
+        self.Slice_input.setText(QCoreApplication.translate("MainWindow", u"20", None))
+        self.Save_ROI_btn.setText(QCoreApplication.translate("MainWindow", u"Save ROI", None))
         self.IMG_path_text.setText("")
         self.IMG_path_text.setPlaceholderText(QCoreApplication.translate("MainWindow", u"path", None))
         self.Main_fig_box.setTitle(QCoreApplication.translate("MainWindow", u"MainFigure", None))
         self.Column_box.setTitle(QCoreApplication.translate("MainWindow", u"Column", None))
+        self.Slice_correction_btn.setText(QCoreApplication.translate("MainWindow", u"SliceCorrection", None))
+        self.AutoCorrection_btn.setText(QCoreApplication.translate("MainWindow", u"FullCorrection", None))
         self.Open_img_btn.setText(QCoreApplication.translate("MainWindow", u"Open image", None))
         self.Row_box.setTitle(QCoreApplication.translate("MainWindow", u"Row", None))
         self.info_textbox.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -600,8 +654,6 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:'Arial'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:700; color:#45aa9b;\">CCD View Process Program</span></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-weight:700; color:#45aa9b;\"><br /></p></body></html>", None))
-        self.Save_ROI_btn.setText(QCoreApplication.translate("MainWindow", u"Save ROI", None))
-        self.AutoCorrection_btn.setText(QCoreApplication.translate("MainWindow", u"AutoCorrection", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
         self.menuanalysise.setTitle(QCoreApplication.translate("MainWindow", u"Analysis", None))
         self.menuView.setTitle(QCoreApplication.translate("MainWindow", u"View", None))
