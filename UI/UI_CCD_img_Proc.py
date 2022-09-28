@@ -174,7 +174,7 @@ class Ui_MainWindow(object):
         self.toolBox.addItem(self.page, u"Tools")
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
-        self.page_2.setGeometry(QRect(0, 0, 300, 301))
+        self.page_2.setGeometry(QRect(0, 0, 140, 152))
         self.gridLayout_7 = QGridLayout(self.page_2)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.verticalLayout_3 = QVBoxLayout()
@@ -480,10 +480,6 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addLayout(self.horizontalLayout_2)
 
-        self.horizontalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
-
         self.Slice_correction_btn = QPushButton(self.centralwidget)
         self.Slice_correction_btn.setObjectName(u"Slice_correction_btn")
         sizePolicy1.setHeightForWidth(self.Slice_correction_btn.sizePolicy().hasHeightForWidth())
@@ -497,6 +493,10 @@ class Ui_MainWindow(object):
 "color: rgb(255, 255, 255);")
 
         self.horizontalLayout_4.addWidget(self.Slice_correction_btn)
+
+        self.horizontalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
 
         self.AutoCorrection_btn = QPushButton(self.centralwidget)
         self.AutoCorrection_btn.setObjectName(u"AutoCorrection_btn")

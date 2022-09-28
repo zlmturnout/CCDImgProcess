@@ -334,8 +334,8 @@ color: rgb(255, 255, 255);</string>
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>300</width>
-                 <height>301</height>
+                 <width>140</width>
+                 <height>152</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -1366,19 +1366,6 @@ color: rgb(255, 102, 143);</string>
            <layout class="QHBoxLayout" name="horizontalLayout_2"/>
           </item>
           <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
            <widget class="QPushButton" name="Slice_correction_btn">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1410,6 +1397,19 @@ color: rgb(255, 255, 255);</string>
              <string>SliceCorrection</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
           <item>
            <widget class="QPushButton" name="AutoCorrection_btn">

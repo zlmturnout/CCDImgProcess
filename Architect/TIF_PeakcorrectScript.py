@@ -246,7 +246,7 @@ if __name__=="__main__":
     filename,extension=os.path.splitext(file)
     print(f'save folder: {save_folder}\n filename:{filename}, type:{extension}')
     # selected point near the mid of the line
-    p_col=1126
+    p_col=1088
     p_row=1042
     half_n=50   # total 2*half_n rows for correction
 

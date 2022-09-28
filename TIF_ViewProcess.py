@@ -32,6 +32,7 @@ from UI.UI_CCD_img_Proc import Ui_MainWindow
 
 # import Gauss peak correction
 from Architect.TIF_PeakcorrectScript import Fit_peak_data
+from Architect.PeakCorrection_GECCD import partial_peak_correct,tif_preprocess,minimize_FWHM
 
 # save path info
 save_path = os.path.join(os.getcwd(), 'save_img')
@@ -102,6 +103,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.pd_col_data = pd.DataFrame()
         # file title
         self.file_folder=os.getcwd()
+        self.fitData_folder=today_folder
         self.file_title=''
 
     def open_tif_img(self):
@@ -115,8 +117,8 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         print(filename, filetype)
         # save raw image datainfo
         self.file_folder,file=os.path.split(filename)
+        self.fitData_folder=creatPath(os.path.join(self.file_folder,'CorrectedResults'))
         self.file_title,extension=os.path.splitext(file)
-        
         if os.path.isfile(filename) and filename.endswith('.tif'):
             img = Image.open(filename)
             #matrix = np.array(img,dtype=np.float32)
@@ -236,16 +238,29 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
     @Slot()
     def on_AutoCorrection_btn_clicked(self):
         """
-        find the corrected width of RIXS line from the input image
+        find the corrected width of RIXS line from the input image (ROI)
         :return:
         """
-          
         if not self.Sub_img_data.size==0:
-            Fit_peak_data(self.Sub_img_data,self.peak_col,self.half_n,self.file_folder,self.file_title)
+            Fit_peak_data(self.Sub_img_data,self.peak_col,self.half_n,self.fitData_folder,self.file_title)
         else:
             print("should select ROI first")
 
+    @log_exceptions(log_func=logger.error)
+    @Slot()
+    def on_Slice_correction_btn_clicked(self):
+        """find FWHM of RIXS line by slice the ROI into many parts and fit- addition 
 
+        Returns:
+            _type_: _description_
+        """
+        if not self.Sub_img_data.size==0:
+            clean_matrix,median_matrix=tif_preprocess(self.Sub_img_data)
+            slice_n=self.set_slice_n()
+            partial_peak_correct(clean_matrix,slice_n=slice_n,p_col=self.peak_col,save_folder=self.fitData_folder,filename=self.file_title)
+            plt.show()
+        else:
+            print("should select ROI first")
 
     @Slot()
     def on_Add_row_btn_clicked(self):
@@ -270,9 +285,6 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             x_list,y_list=list(self.pd_col_data.index),list(self.col_add_data)
             self.show_column_plot(x_list,y_list)
             #self.save_pd_data(pd_col_data)
-
-    
-
     '''
         end action button part
     '''
@@ -407,6 +419,14 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         half_n=int(self.half_n_input.text())
         return half_n if half_n>10 and half_n<1024 else 50
 
+    def set_slice_n(self):
+        """set the number of slices
+
+        Returns:
+           slice_n (int): _description_
+        """
+        slice_n=int(self.Slice_input.text())
+        return slice_n if slice_n>0 and slice_n<100 else 20
 
     @Slot()
     def on_Draw_box_tool_clicked(self):
@@ -543,7 +563,6 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         #self.save_pd_data(pd_column_data)
         self.show_row_plot(row_list, row_index)
 
-
     def on_main_release(self,event):
         """get the end x,y and draw a box
 
@@ -635,7 +654,6 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.Sub_img_data=self.Peak_img_data
 
         self.show_Sub_img(self.Peak_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
-        
 
     @Slot()
     def on_Save_row_col_btn_clicked(self):
@@ -687,7 +705,6 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
     """
     display img part
     """
-
     def show_Sub_img(self, Sub_img_data: np.array([]),Imin:int=1300,Imax:int=1400):
         """
         display background TIF img data

@@ -13,8 +13,8 @@ UI/__pycache__
 *.log
 html/
 save_data
-UI/*.jpg
-
+*.jpg
+*.xlsx
 # Distribution / packaging
 .Python
 .idea/

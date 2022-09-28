@@ -236,11 +236,11 @@ def partial_peak_correct(peak_data:np.array([]),slice_n:int=50,p_col:int=935,sav
     fulladd_array=np.zeros(column)
     for i in range(0,row,n_rows):
         peak_slices.append(peak_data[i:i+n_rows],)
-    #peak_slices.pop(-1)
+    peak_slices.pop(-1)
     for index,each_slice in enumerate(peak_slices):
         min_result,j,para_b=minimize_FWHM(each_slice,j_n=100,p_col=p_col)
-        print(f'{index}-find minimal FWHM: {min_result[0]} with para=({j},{para_b})')
-        plot_fit_line(min_result,index,save_folder)
+        print(f'{index}-find minimal FWHM: {min_result[0]:.4f} with para=({j},{para_b})')
+        #plot_fit_line(min_result,index,save_folder)
         #min_result=[FWHM,{"para":(j,b_para)},Fit_results,(x_list,result)]
         slicefit_rep=min_result[-2]
         slice_cor_datalist.append([index,*slicefit_rep["FWHM"],*slicefit_rep["cen"],*slicefit_rep["wid"],*min_result[1]['para']])
@@ -259,7 +259,7 @@ def partial_peak_correct(peak_data:np.array([]),slice_n:int=50,p_col:int=935,sav
     #print(fulladd_array)
     Fullfit_results,fulladd_FWHM=GaussianFit(x_array,fulladd_array,p_col,info='Full addition-Gaussfit')
     Total_add_result=[fulladd_FWHM,{"para":"Full addition-Gaussfit"},Fullfit_results,(x_array,fulladd_array)]
-    plot_fit_line(Total_add_result,index=slice_n,save_folder=save_folder)
+    plot_fit_line(Total_add_result,index=slice_n+1,save_folder=save_folder,title=filename)
     # add fullfit result
     slice_cor_datalist.append([slice_n,*Fullfit_results["FWHM"],*Fullfit_results["cen"],*Fullfit_results["wid"],0,0])
     # save to excel file
@@ -276,8 +276,7 @@ def partial_peak_correct(peak_data:np.array([]),slice_n:int=50,p_col:int=935,sav
     save_pd_data(corr_pddata,save_folder,filename=f'Correction_slice_resports-{filename}')
 
 
-
-def plot_fit_line(min_result:list,index:int=0,save_folder:str='./'):
+def plot_fit_line(min_result:list,index:int=0,save_folder:str='./',title:str='peak-img-fit'):
     """ min_result:[FWHM,{"para":(j,b_para)},Fit_results,(x_list,result)]
 
     Args:
@@ -295,7 +294,7 @@ def plot_fit_line(min_result:list,index:int=0,save_folder:str='./'):
     plt.text(0.5, 0.5, s=FWHM_text+'\n'+cen_text+f'\nwith para={min_result[1]["para"]}',color = "m", transform=ax.transAxes,fontsize=15)
     plt.title(f"Best Gaussfit with minimal FWHM-Slice-{index}")
     plt.legend()
-    save_fig=os.path.join(save_folder,f'Slice-{index}_fit_results.jpg')
+    save_fig=os.path.join(save_folder,f'Slice-{index}_fit_results-{title}.jpg')
     plt.savefig(save_fig)
 
 
