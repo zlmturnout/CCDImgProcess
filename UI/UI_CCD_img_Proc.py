@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1428, 900)
+        MainWindow.resize(1417, 945)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -62,7 +62,7 @@ class Ui_MainWindow(object):
         self.toolBox.setAutoFillBackground(False)
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 300, 301))
+        self.page.setGeometry(QRect(0, 0, 300, 346))
         self.gridLayout_2 = QGridLayout(self.page)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.Refresh_tool = QPushButton(self.page)
@@ -174,7 +174,7 @@ class Ui_MainWindow(object):
         self.toolBox.addItem(self.page, u"Tools")
         self.page_2 = QWidget()
         self.page_2.setObjectName(u"page_2")
-        self.page_2.setGeometry(QRect(0, 0, 140, 152))
+        self.page_2.setGeometry(QRect(0, 0, 300, 346))
         self.gridLayout_7 = QGridLayout(self.page_2)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.verticalLayout_3 = QVBoxLayout()
@@ -494,6 +494,20 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.Slice_correction_btn)
 
+        self.Peak_Correlation_btn = QPushButton(self.centralwidget)
+        self.Peak_Correlation_btn.setObjectName(u"Peak_Correlation_btn")
+        sizePolicy1.setHeightForWidth(self.Peak_Correlation_btn.sizePolicy().hasHeightForWidth())
+        self.Peak_Correlation_btn.setSizePolicy(sizePolicy1)
+        self.Peak_Correlation_btn.setMinimumSize(QSize(120, 40))
+        self.Peak_Correlation_btn.setFont(font)
+        self.Peak_Correlation_btn.setStyleSheet(u"background-color: rgb(255, 28, 149);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.horizontalLayout_4.addWidget(self.Peak_Correlation_btn)
+
         self.horizontalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
@@ -582,7 +596,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1428, 31))
+        self.menubar.setGeometry(QRect(0, 0, 1417, 31))
         font3 = QFont()
         font3.setPointSize(14)
         font3.setBold(False)
@@ -644,6 +658,7 @@ class Ui_MainWindow(object):
         self.Main_fig_box.setTitle(QCoreApplication.translate("MainWindow", u"MainFigure", None))
         self.Column_box.setTitle(QCoreApplication.translate("MainWindow", u"Column", None))
         self.Slice_correction_btn.setText(QCoreApplication.translate("MainWindow", u"SliceCorrection", None))
+        self.Peak_Correlation_btn.setText(QCoreApplication.translate("MainWindow", u"PeakCorrelation", None))
         self.AutoCorrection_btn.setText(QCoreApplication.translate("MainWindow", u"FullCorrection", None))
         self.Open_img_btn.setText(QCoreApplication.translate("MainWindow", u"Open image", None))
         self.Row_box.setTitle(QCoreApplication.translate("MainWindow", u"Row", None))

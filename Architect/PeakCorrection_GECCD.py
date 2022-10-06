@@ -162,6 +162,7 @@ def minimize_FWHM(peak_data:np.array([]),j_n:int=100,p_col:int=935):
     # find the smallest FWHM in all valid Fit_results by varying j
     FWHM_results=[]
     min_FWHM=column
+    FWHM_list=[5.0,5.0]
     min_result=None
     cur_j=0
     cur_b_para=0
@@ -177,14 +178,16 @@ def minimize_FWHM(peak_data:np.array([]),j_n:int=100,p_col:int=935):
             print(f'FWHM estimated failed with parameter({j},{b_para:6f}):\n{Fit_results} ')
         else:
             # Gaussian fit success
+            FWHM_array=np.array(FWHM_list[:-1])
             FWHM_results.append(Fit_results)
-            if FWHM<min_FWHM:
+            if FWHM<min_FWHM and  FWHM>np.average(FWHM_array)*0.1:
                 min_FWHM=FWHM
                 cur_j=int(j)
                 cur_b_para=round(b_para,6)
                 new_results=Fit_results
                 new_linedata=(x_list,result)
                 min_result=[FWHM,{"para":(cur_j,cur_b_para)},new_results,new_linedata]
+                FWHM_list.append(FWHM)
             else:
                 pass
     #print(f'find Gaussian fit results with minimal FWHM={min_FWHM} + \ '
@@ -259,7 +262,7 @@ def partial_peak_correct(peak_data:np.array([]),slice_n:int=50,p_col:int=935,sav
     #print(fulladd_array)
     Fullfit_results,fulladd_FWHM=GaussianFit(x_array,fulladd_array,p_col,info='Full addition-Gaussfit')
     Total_add_result=[fulladd_FWHM,{"para":"Full addition-Gaussfit"},Fullfit_results,(x_array,fulladd_array)]
-    plot_fit_line(Total_add_result,index=slice_n+1,save_folder=save_folder,title=filename)
+    #plot_SliceFit_line(Total_add_result,index=slice_n+1,save_folder=save_folder,title=filename)
     # add fullfit result
     slice_cor_datalist.append([slice_n,*Fullfit_results["FWHM"],*Fullfit_results["cen"],*Fullfit_results["wid"],0,0])
     # save to excel file
@@ -274,9 +277,10 @@ def partial_peak_correct(peak_data:np.array([]),slice_n:int=50,p_col:int=935,sav
     save_pd_data(slice_pddata,save_folder,filename=f'Gaussfit_Slice_p_col-{p_col}-{filename}')
     save_pd_data(center_pddata,save_folder,filename=f'Gaussfit_Centered_p_col-{p_col}-{filename}')
     save_pd_data(corr_pddata,save_folder,filename=f'Correction_slice_resports-{filename}')
+    return Total_add_result
 
 
-def plot_fit_line(min_result:list,index:int=0,save_folder:str='./',title:str='peak-img-fit'):
+def plot_SliceFit_line(min_result:list,index:int=0,save_folder:str='./',title:str='peak-img-fit'):
     """ min_result:[FWHM,{"para":(j,b_para)},Fit_results,(x_list,result)]
 
     Args:
@@ -286,12 +290,12 @@ def plot_fit_line(min_result:list,index:int=0,save_folder:str='./',title:str='pe
     fig=plt.figure(figsize =(16, 9))
     fig.canvas.manager.window.setWindowTitle(f"Fit-FWHM-slice{index}")
     ax=plt.subplot()
-    plt.plot(*min_result[-2]['origin_data'], 'o')
+    plt.plot(*min_result[-2]['origin_data'], 'o',label='corrected data')
     plt.plot(*min_result[-2]['ini_fit'], '--', label='initial fit')
     plt.plot(*min_result[-2]['best_fit'], '-', label='best fit')
     FWHM_text=f'FWHM={min_result[-2]["FWHM"][0]:.4f} +/-{min_result[-2]["FWHM"][1]:.4f}'
     cen_text=f'cen={min_result[-2]["cen"][0]:.4f} +/-{min_result[-2]["cen"][1]:.4f}'
-    plt.text(0.5, 0.5, s=FWHM_text+'\n'+cen_text+f'\nwith para={min_result[1]["para"]}',color = "m", transform=ax.transAxes,fontsize=15)
+    plt.text(0.55, 0.5, s=FWHM_text+'\n'+cen_text+f'\nwith para={min_result[1]["para"]}',color = "m", transform=ax.transAxes,fontsize=15)
     plt.title(f"Best Gaussfit with minimal FWHM-Slice-{index}")
     plt.legend()
     save_fig=os.path.join(save_folder,f'Slice-{index}_fit_results-{title}.jpg')

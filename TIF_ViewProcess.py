@@ -32,7 +32,8 @@ from UI.UI_CCD_img_Proc import Ui_MainWindow
 
 # import Gauss peak correction
 from Architect.TIF_PeakcorrectScript import Fit_peak_data
-from Architect.PeakCorrection_GECCD import partial_peak_correct,tif_preprocess,minimize_FWHM
+from Architect.PeakCorrection_GECCD import partial_peak_correct,tif_preprocess,minimize_FWHM,plot_SliceFit_line
+from Architect.AutoCorrelation_GaussPeak import minimal_FWHM_correlation,correlation_FWHM,plot_GaussFit_results,get_slice_peaks
 
 # save path info
 save_path = os.path.join(os.getcwd(), 'save_img')
@@ -45,6 +46,41 @@ creatPath(log_path)
 log_file = f'{time.strftime("%Y-%m-%d", time.localtime())}.log'
 logger = my_logger(log_file=os.path.join(log_path, log_file), logger_name='Limin')
 
+class RunQThread(QThread):
+    """
+    run any time consuming operation of func(*args,**kwargs)
+    :argument can provide keyword args <timeout:float=1000.0>ms
+    :return the signal will send function's return value in list form (return=funcs())
+    Notice: if run exception occurs,will emit the <Exception info>
+    """
+    run_sig = Signal(list)
+   
+    def __init__(self, func, *args, timeout: float = 1000.0, **kwargs):
+        super(RunQThread, self).__init__()
+        self.args = args
+        self.kwargs = kwargs
+        self.run_flag = True
+        self.run_time = timeout
+        self.func = func
+        self.result = None
+
+    def run(self):
+        t0 = time.time()
+        #print('QThread start')
+        while self.run_flag and time.time() - t0 < self.run_time:
+            try:
+                self.result = self.func(*self.args, **self.kwargs)
+            except Exception as e:
+                # print(e)
+                error_info = traceback.format_exc() + str(e) + '\n'
+                self.run_sig.emit([error_info])
+            else:
+                self.run_flag = False
+                self.run_sig.emit([self.result])
+                print(f'Qthread run cost{time.time()-t0:.2f}s')
+
+    def __del__(self):
+        self.run_time = False
 
 class TIFProcess(QMainWindow, Ui_MainWindow):
 
@@ -193,7 +229,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             filename,extension=os.path.splitext(file)
             self.ROI_to_excel(self.Sub_img_data,save_folder,filename)
             
-
+    
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
     """
     fig part
@@ -228,7 +264,13 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.Col_layout.addWidget(Col_Canvas)
         # self.Col_layout.addWidget((NavigationToolbar(Col_Canvas, self)))
         self._Col_ax = Col_Canvas.figure.subplots()
+        # timer for progressBar
+        self.processBar_timer=QTimer()
+        self.start_time=time.time()
+        self.processBar_timer.timeout.connect(self.check_imgprocess)
 
+    def set_progress_Bar(self,status:int):
+        self.progressBar.setValue(status)
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
     '''
     start correction action button part
@@ -248,6 +290,56 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
 
     @log_exceptions(log_func=logger.error)
     @Slot()
+    def on_Peak_Correlation_btn_clicked(self):
+        """ find the mininal FWHM by peak Correlation method
+
+        Returns:
+            _type_: _description_
+        """
+        if not self.Sub_img_data.size==0:
+            try:
+                # timer for img process
+                self.processBar_timer.start(1000)
+                self.start_time=time.time()
+                clean_matrix,median_matrix=tif_preprocess(self.Sub_img_data)
+                slice_n=self.set_slice_n()
+                self.Peak_correlation_Qthread=RunQThread(minimal_FWHM_correlation,clean_matrix,slice_n,self.peak_col,self.fitData_folder,self.file_title)
+                self.Peak_correlation_Qthread.run_sig.connect(self.get_PeakCorelation_results)
+                self.Peak_correlation_Qthread.start()
+            except Exception as e:
+                print(traceback.format_exc()+e)
+        else:
+            print("should select ROI first")
+
+    @Slot(list)
+    def get_PeakCorelation_results(self,result:list):
+        #stop timer
+        self.set_progress_Bar(100)
+        self.processBar_timer.stop()
+        # unpack the results
+        min_result=result[0]
+        slice_n=min_result[-1].get("slice_n")
+        p_col=min_result[-1].get("p_col")
+        # plot best fit results with minimal FWHM
+        plot_GaussFit_results(min_result[0],title=f'slice_n-{slice_n}_p_col-{p_col}')
+        print(f'find minimal FWHM={min_result[1]:.4f} with parameter {min_result[-1]} and\n {min_result[0]["para"]}')
+        clean_matrix,median_matrix=tif_preprocess(self.Sub_img_data)
+        row_list,col_list=get_slice_peaks(clean_matrix,slice_n=slice_n,p_col=p_col)
+        fig3 = plt.figure(figsize =(16, 9)) 
+        fig3.canvas.manager.window.setWindowTitle("Display slice peak center")
+        plt.imshow(self.Main_img_data,cmap=cm.rainbow,vmin=1300,vmax=1380)
+        plt.colorbar(location='bottom', fraction=0.1),plt.title("slice peak center")
+        plt.plot(col_list,row_list,'o',label='slice center pixel',markersize=0.5,color='b')
+        plt.show()
+
+    @Slot()
+    def check_imgprocess(self):
+        timeout=60 #1000s for process
+        precentage=int(100*(time.time()-self.start_time)/timeout)
+        self.set_progress_Bar(precentage)
+
+    @log_exceptions(log_func=logger.error)
+    @Slot()
     def on_Slice_correction_btn_clicked(self):
         """find FWHM of RIXS line by slice the ROI into many parts and fit- addition 
 
@@ -255,13 +347,30 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             _type_: _description_
         """
         if not self.Sub_img_data.size==0:
+            # timer for img process
+            self.processBar_timer.start(1000)
+            self.start_time=time.time()
             clean_matrix,median_matrix=tif_preprocess(self.Sub_img_data)
             slice_n=self.set_slice_n()
-            partial_peak_correct(clean_matrix,slice_n=slice_n,p_col=self.peak_col,save_folder=self.fitData_folder,filename=self.file_title)
-            plt.show()
+            self.Peak_SliceCorrect_Qthread=RunQThread(partial_peak_correct,clean_matrix,slice_n,self.peak_col,self.fitData_folder,self.file_title)
+            self.Peak_SliceCorrect_Qthread.run_sig.connect(self.get_SliceCorrect_results)
+            self.Peak_SliceCorrect_Qthread.start()
+            #partial_peak_correct(clean_matrix,slice_n=slice_n,p_col=self.peak_col,save_folder=self.fitData_folder,filename=self.file_title)
+            #plt.show()
         else:
             print("should select ROI first")
-
+    
+    @Slot(list)
+    def get_SliceCorrect_results(self,result:list):
+        #stop timer
+        self.set_progress_Bar(100)
+        self.processBar_timer.stop()
+        # unpack the results
+        Total_add_result=result[0]
+        slice_n=self.set_slice_n()
+        plot_SliceFit_line(Total_add_result,index=slice_n+1,save_folder=self.fitData_folder,title=self.file_title)
+        plt.show()
+    
     @Slot()
     def on_Add_row_btn_clicked(self):
         if not self.Main_img_data.size == 0:
@@ -426,7 +535,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
            slice_n (int): _description_
         """
         slice_n=int(self.Slice_input.text())
-        return slice_n if slice_n>0 and slice_n<100 else 20
+        return slice_n if slice_n>0 and slice_n<1000 else 20
 
     @Slot()
     def on_Draw_box_tool_clicked(self):

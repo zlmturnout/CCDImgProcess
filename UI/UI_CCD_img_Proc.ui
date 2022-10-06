@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1428</width>
-    <height>900</height>
+    <width>1417</width>
+    <height>945</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -80,7 +80,7 @@
                  <x>0</x>
                  <y>0</y>
                  <width>300</width>
-                 <height>301</height>
+                 <height>346</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -334,8 +334,8 @@ color: rgb(255, 255, 255);</string>
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>140</width>
-                 <height>152</height>
+                 <width>300</width>
+                 <height>346</height>
                 </rect>
                </property>
                <attribute name="label">
@@ -1399,6 +1399,39 @@ color: rgb(255, 255, 255);</string>
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="Peak_Correlation_btn">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>120</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Arial</family>
+              <pointsize>12</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: rgb(255, 28, 149);
+border-bottom-color: rgb(139, 139, 139);
+border-right-color: rgb(48, 48, 48);
+selection-color: rgb(255, 85, 127);
+color: rgb(255, 255, 255);</string>
+            </property>
+            <property name="text">
+             <string>PeakCorrelation</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="horizontalSpacer_2">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1573,7 +1606,7 @@ hr { height: 1px; border-width: 0; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1428</width>
+     <width>1417</width>
      <height>31</height>
     </rect>
    </property>
