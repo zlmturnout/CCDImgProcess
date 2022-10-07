@@ -249,7 +249,8 @@ def correlation_FWHM(peak_data:np.array([]),slice_n:int=20,p_col:int=935,save_fo
         # get the fianl FWHM Gaussfit results
         Fit_results,FWHM=GaussianFit(x_list,result,p_col,info="Correlation-fit")
         if FWHM==-1: 
-            print(f'FWHM estimated failed with parameter(a,b,c)={pcov}):\n{Fit_results} ')
+            #print(f'FWHM estimated failed with parameter(a,b,c)={pcov}):\n{Fit_results} ')
+            print(f'FWHM estimated failed with parameter (a,b,c)={pcov}):\n ')
         else:
             # Gaussian fit success
             Fit_results['para']=f'[a,b,c]=[{a:.4f},{b:.4e},{c:.4e}]'
@@ -294,7 +295,7 @@ def minimal_FWHM_correlation(peak_data:np.array([]),slice_n:int=100,p_col:int=93
         for slices in slice_list:
             Fit_results,FWHM=correlation_FWHM(peak_data,slice_n=slices,p_col=col_index,save_folder=save_folder,filename=filename)
             if FWHM==-1: 
-                print(f'FWHM estimated failed with parameter(slice_n={slices},p_col={col_index}):\n{Fit_results} ')
+                print(f'FWHM estimated failed with parameter(slice_n={slices},p_col={col_index}) ')
             else:
                 FWHM_array=np.array(FWHM_list[:-1])
             # Gaussian fit success

@@ -321,7 +321,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         slice_n=min_result[-1].get("slice_n")
         p_col=min_result[-1].get("p_col")
         # plot best fit results with minimal FWHM
-        plot_GaussFit_results(min_result[0],title=f'slice_n-{slice_n}_p_col-{p_col}')
+        plot_GaussFit_results(min_result[0],save_folder=self.fitData_folder,title=f'{self.file_title}_slice_n-{slice_n}_p_col-{p_col}')
         print(f'find minimal FWHM={min_result[1]:.4f} with parameter {min_result[-1]} and\n {min_result[0]["para"]}')
         clean_matrix,median_matrix=tif_preprocess(self.Sub_img_data)
         row_list,col_list=get_slice_peaks(clean_matrix,slice_n=slice_n,p_col=p_col)
@@ -330,6 +330,8 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         plt.imshow(self.Main_img_data,cmap=cm.rainbow,vmin=1300,vmax=1380)
         plt.colorbar(location='bottom', fraction=0.1),plt.title("slice peak center")
         plt.plot(col_list,row_list,'o',label='slice center pixel',markersize=0.5,color='b')
+        save_fig=os.path.join(self.fitData_folder,f'CorrelationSlice_Peakcenter_{self.file_title}.jpg')
+        plt.savefig(save_fig)
         plt.show()
 
     @Slot()
