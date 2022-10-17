@@ -1,39 +1,50 @@
-from re import S
-import time, random, sys, os, math
-from tkinter.messagebox import NO
-import matplotlib
-from matplotlib.patches import Rectangle
-import cv2
+import datetime
+import math
+import os
+import random
+import sys
+import time
+import traceback
 from collections import namedtuple
-import matplotlib.image as mpimage
-import pandas as pd
-
-from matplotlib.backends.backend_qtagg import(FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
-from matplotlib.figure import Figure
-from matplotlib.pyplot import MultipleLocator
-import matplotlib.image as mpimg
-import numpy as np
-import matplotlib.cm as cm
-import matplotlib.pyplot as plt
-from PIL import Image
-from tifffile import tifffile
-import time, random, sys, os, math, datetime, traceback
-from PySide6.QtWidgets import QWidget, QPushButton, QApplication, QMainWindow, QGridLayout
-from PySide6.QtCore import QTimer, Slot, QThread, Signal, Qt
-from PySide6.QtGui import QDoubleValidator, QIntValidator, QTextCursor,QAction
-from PySide6 import QtCore, QtWidgets
-from PySide6.QtWidgets import QWidget, QPushButton, QStyle, QFileDialog, QApplication, QMainWindow, QGridLayout, \
-    QHBoxLayout, QVBoxLayout, QMessageBox
 # import tools functions
-from resource.Tools_functions import get_datetime, my_logger, creatPath, to_log, log_exception, log_exceptions, \
-    deco_count_time
-# import main UI function
-from UI.UI_CCD_img_Proc import Ui_MainWindow
+from resource.Tools_functions import (creatPath, deco_count_time, get_datetime,
+                                      log_exception, log_exceptions, my_logger,
+                                      to_log)
 
+import cv2
+import matplotlib
+import matplotlib.cm as cm
+import matplotlib.image as mpimage
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from matplotlib.backends.backend_qtagg import FigureCanvas
+from matplotlib.backends.backend_qtagg import \
+    NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
+from matplotlib.patches import Rectangle
+from matplotlib.pyplot import MultipleLocator
+from PIL import Image
+from PySide6 import QtCore, QtWidgets
+from PySide6.QtCore import Qt, QThread, QTimer, Signal, Slot
+from PySide6.QtGui import QAction, QDoubleValidator, QIntValidator, QTextCursor
+from PySide6.QtWidgets import (QApplication, QFileDialog, QGridLayout,
+                               QHBoxLayout, QMainWindow, QMessageBox,
+                               QPushButton, QStyle, QVBoxLayout, QWidget)
+from tifffile import tifffile
+
+from Architect.AutoCorrelation_GaussPeak import (correlation_FWHM,
+                                                 get_slice_peaks,
+                                                 minimal_FWHM_correlation,
+                                                 plot_GaussFit_results)
+from Architect.PeakCorrection_GECCD import (minimize_FWHM,
+                                            partial_peak_correct,
+                                            plot_SliceFit_line, tif_preprocess)
 # import Gauss peak correction
 from Architect.TIF_PeakcorrectScript import Fit_peak_data
-from Architect.PeakCorrection_GECCD import partial_peak_correct,tif_preprocess,minimize_FWHM,plot_SliceFit_line
-from Architect.AutoCorrelation_GaussPeak import minimal_FWHM_correlation,correlation_FWHM,plot_GaussFit_results,get_slice_peaks
+# import main UI function
+from UI.UI_CCD_img_Proc import Ui_MainWindow
 
 # save path info
 save_path = os.path.join(os.getcwd(), 'save_img')
