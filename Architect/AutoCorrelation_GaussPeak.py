@@ -50,7 +50,7 @@ def clear_bg(exp):
         temp[i, :] = exp[i, :] - exp_bg
     return u, v, temp
 
-def tif_preprocess(tif_data:np.array([])):
+def tif_preprocess(tif_data:np.array([]),detector_clean:bool=True):
     """preprocess the input img data into denoised and clean_background data
     protocol:
     1. median filter
@@ -62,8 +62,11 @@ def tif_preprocess(tif_data:np.array([])):
     """
     print(f'img data shape:\n width,height={tif_data.shape}')
     median_matrix=median_filter(tif_data,filter_N=3)
-    clean_matrix=detectorclean(median_matrix,noise1=50,noise2=200,thresholdUP=0.9,thresholdDOWN=0.1)
-    #width,height,clearBG_matrix=clear_bg(median_matrix)
+    if detector_clean:
+        clean_matrix=detectorclean(median_matrix,noise1=50,noise2=200,thresholdUP=0.9,thresholdDOWN=0.1)
+    else:
+        clean_matrix=median_matrix
+        #width,height,clearBG_matrix=clear_bg(median_matrix)
     width,height,clearBG_matrix=clear_bg(clean_matrix)
     return clearBG_matrix,median_matrix
 
@@ -379,14 +382,14 @@ if __name__=="__main__":
     filename,extension=os.path.splitext(file)
     print(f'save folder: {save_folder}\n filename:{filename}, type:{extension}')
     # selected point near the mid of the line
-    p_col=1084
+    p_col=1000
     p_row=1042
-    half_n=50   # total 2*half_n rows for correction
+    half_n=200   # total 2*half_n rows for correction
 
     img = Image.open(img_path)
     img_matrix = np.array(img,dtype=np.float32)
     cut_matrix=img_matrix[:,p_col-half_n:p_col+half_n]
-    clean_matrix,median_matrix=tif_preprocess(cut_matrix)
+    clean_matrix,median_matrix=tif_preprocess(cut_matrix,False)
 
     fig2 = plt.figure(figsize =(16, 9)) 
     fig2.canvas.manager.window.setWindowTitle("image data preprocess")
@@ -427,9 +430,9 @@ if __name__=="__main__":
     # FWHM by direct add rows
     direct_addrows_FWHM(clean_matrix,p_col=p_col,save_folder=save_folder,filename=filename)
     # find the peak center for each slice
-    Fit_results,FWHM=correlation_FWHM(clean_matrix,slice_n=slice_n,p_col=p_col,save_folder=save_folder,filename=filename)
-    get_correlation_img(img_matrix,fit_para=Fit_results['fit_para'],p_col=p_col,save_folder=corr_folder,filename=filename)
-    #min_result=minimal_FWHM_correlation(clean_matrix,slice_n=slice_n,p_col=p_col,save_folder=save_folder,filename=filename)
+    #Fit_results,FWHM=correlation_FWHM(clean_matrix,slice_n=slice_n,p_col=p_col,save_folder=save_folder,filename=filename)
+    #get_correlation_img(img_matrix,fit_para=Fit_results['fit_para'],p_col=p_col,save_folder=corr_folder,filename=filename)
+    min_result=minimal_FWHM_correlation(clean_matrix,slice_n=slice_n,p_col=p_col,save_folder=save_folder,filename=filename)
     #get_correlation_img(img_matrix,fit_para=min_result[0]['fit_para'],p_col=p_col)
     plt.show()
 

@@ -127,6 +127,7 @@ def shift_pixel(index:int,j:int=1):
     return round((-0.0007+0.00005*j)*index+index**2*(1e-7)) # best fit results 0918-11
     #return round((-0.0006+0.00005*j)*index+index**2*(1e-7)) # best fit results 0905-12
     #return round(-(20/57.0+0.002*j+j**2*(1e-7))*index)  # for test line y=57*x-57000
+    #return round((1/57+0.0001*j+j**2*(1e-7))*index)  # for test line y=57*x-57000
 
 def shift_arrray(array:np.array([]),n:int=0):
     """shift a array by n position to left if True, else right
@@ -171,7 +172,8 @@ def Fit_peak_data(img_matrix:np.asarray([]),p_col:int,half_n:int,save_folder:str
     thresholdDOWN = 0.1
     matrix1 = detectorclean(mean_matrix, noise1=50, noise2=200)
     print(type(matrix1),matrix1.shape)
-    row, column, cor_matrix = clear_bg(matrix1) #2052*400
+    row, column, cor_matrix = clear_bg(matrix1) #2052*400\
+    #row, column, cor_matrix = clear_bg(mean_matrix) #2052*400
     print(f'row: {row}\ncolumn: {column}')
     plt.subplot(3,3,3),plt.imshow(cor_matrix.T,cmap=cm.rainbow,vmin=-25,vmax=25),plt.title("clear background")
     plt.colorbar(location='bottom', fraction=0.1)
@@ -246,7 +248,7 @@ if __name__=="__main__":
     filename,extension=os.path.splitext(file)
     print(f'save folder: {save_folder}\n filename:{filename}, type:{extension}')
     # selected point near the mid of the line
-    p_col=1088
+    p_col=1000
     p_row=1042
     half_n=50   # total 2*half_n rows for correction
 

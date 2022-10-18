@@ -36,7 +36,7 @@ def clear_bg(exp):
         temp[i, :] = exp[i, :] - exp_bg
     return u, v, temp
 
-def tif_preprocess(tif_data:np.array([])):
+def tif_preprocess(tif_data:np.array([]),detector_clean:bool=True):
     """preprocess the input img data into denoised and clean_background data
     protocol:
     1. median filter
@@ -48,8 +48,11 @@ def tif_preprocess(tif_data:np.array([])):
     """
     print(f'img data shape:\n width,height={tif_data.shape}')
     median_matrix=median_filter(tif_data,filter_N=3)
-    clean_matrix=detectorclean(median_matrix,noise1=50,noise2=200,thresholdUP=0.9,thresholdDOWN=0.1)
-    #width,height,clearBG_matrix=clear_bg(median_matrix)
+    if detector_clean:
+        clean_matrix=detectorclean(median_matrix,noise1=50,noise2=200,thresholdUP=0.9,thresholdDOWN=0.1)
+    else:
+        clean_matrix=median_matrix
+        #width,height,clearBG_matrix=clear_bg(median_matrix)
     width,height,clearBG_matrix=clear_bg(clean_matrix)
     return clearBG_matrix,median_matrix
 
@@ -101,6 +104,7 @@ def shift_pixel(index:int,j:int=1):
     return round((-0.0007+0.00005*j)*index+index**2*(1e-7)) # best fit results 0918-11
     #return round((-0.0006+0.00005*j)*index+index**2*(1e-7)) # best fit results 0905-12
     #return round(-(20/57.0+0.002*j+j**2*(1e-7))*index)  # for test line y=57*x-57000
+    #return round((1/57+0.0001*j+j**2*(1e-7))*index)  # for test line y=57*x-57000
 
 def save_pd_data(pd_data: pd.DataFrame, path, filename: str):
     """

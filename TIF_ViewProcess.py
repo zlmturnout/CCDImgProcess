@@ -315,7 +315,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
                 # timer for img process
                 self.processBar_timer.start(1000)
                 self.start_time=time.time()
-                clean_matrix,median_matrix=tif_preprocess(self.Sub_img_data)
+                clean_matrix,median_matrix=tif_preprocess(self.Sub_img_data,detector_clean=True)
                 slice_n=self.set_slice_n()
                 self.Peak_correlation_Qthread=RunQThread(minimal_FWHM_correlation,clean_matrix,slice_n,self.peak_col,self.fitData_folder,self.file_title)
                 self.Peak_correlation_Qthread.run_sig.connect(self.get_PeakCorelation_results)
