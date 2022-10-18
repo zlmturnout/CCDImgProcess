@@ -18,6 +18,16 @@ import pandas as pd
 from numpy import exp, loadtxt, pi, sqrt
 from lmfit import Model
 
+def creatPath(file_path):
+    """
+    create a given path if not exist and return it
+    :param file_path:
+    :return: file_path
+    """
+    if os.path.exists(file_path) is False:
+        os.makedirs(file_path)
+    return file_path
+
 def detectorclean(exp, noise1, noise2,thresholdUP=0.95,thresholdDOWN=0.05):
     exp = exp - np.mean(exp[:, noise1:noise2])
     exp[exp > (np.max(exp) * thresholdUP)] = 0
@@ -118,10 +128,13 @@ def save_pd_data(pd_data: pd.DataFrame, path, filename: str):
     if not os.path.isdir(path):
         save_path = os.getcwd()
     excel_file_path = os.path.join(save_path, filename + '.xlsx')
-    # excel writer
-    excel_writer = pd.ExcelWriter(excel_file_path)
-    pd_data.to_excel(excel_writer)
-    excel_writer.save()
+    # # excel writer
+    # excel_writer = pd.ExcelWriter(excel_file_path)
+    # pd_data.to_excel(excel_writer)
+    # excel_writer.save()
+    with pd.ExcelWriter(excel_file_path) as writer:
+        pd_data.to_excel(writer)
+    print('save to excel xlsx file successfully')
     #print(f'save to excel xlsx file {excel_file_path} successfully')
 
 def direct_addrows_FWHM(full_data:np.array([]),p_col:int=935,save_folder:str='./',filename:str='direct_addrows'):
@@ -254,6 +267,7 @@ def correlation_FWHM(peak_data:np.array([]),slice_n:int=20,p_col:int=935,save_fo
         else:
             # Gaussian fit success
             Fit_results['para']=f'[a,b,c]=[{a:.4f},{b:.4e},{c:.4e}]'
+            Fit_results['fit_para']=[a,b,c]
             print(f'get FWHM={FWHM:.4f}+/-{Fit_results["FWHM"][1]:4f} by correlation method with slice={slice_n} and p_col={p_col}')
             slice_peakdata=pd.DataFrame({"row":row_list,"center_col":col_list})
             save_pd_data(slice_peakdata,save_folder,filename=f'Gaussfit_Correlation_p_col-{p_col}-{filename}')
@@ -309,7 +323,48 @@ def minimal_FWHM_correlation(peak_data:np.array([]),slice_n:int=100,p_col:int=93
     print(f'find minimal FWHM={min_result[1]:.4f} with parameter {min_result[-1]}')
     return min_result
 
+def get_correlation_img(peak_data:np.array([]),fit_para:list,p_col:int=935,dis_const:float=29.3,vmin:int=1300,vmax:int=1380,save_folder:str='./',filename:str='correctedPeak_img'):
+    """correct raw image based on the fit_parameter of peak-line,peak center at p_col
+    fit_para:[a,b,c] means y=a+b*x+c*x**2
 
+    Args:
+        peak_data (np.array): _description_
+        fit_para (list): [a,b,c] y=a+b*x+c*x**2
+        p_col (int, optional): peak center, Defaults to 935.
+    """
+    row,column=peak_data.shape
+    half_n=round(column/2)
+    x_list=np.array([i for i in range(column)])-half_n+p_col
+    E_list=(np.array([i for i in range(column)])-half_n+p_col)*dis_const/1000+443.5
+    # find the  FWHM with parameter j
+    FWHM_info=None
+    corr_peakdata=np.zeros(shape=peak_data.shape)
+    sum_result = np.zeros(column)
+    [a,b,c]=fit_para
+    for index in range(row):
+        temp =peak_data[index, :]
+        shift_n=cal_shift_pixel(index,p_col,a,b,c)
+        corr_array=shift_arrray(temp,shift_n)
+        corr_peakdata[index,:]=corr_array
+        sum_result += corr_array
+    #print(corr_peakdata)
+    # display corrected img
+    fig, [ax1, ax2] = plt.subplots(2, 1, tight_layout=True,figsize=(16, 9))
+    fig.canvas.manager.window.setWindowTitle("Display corrected image")
+    im=ax1.imshow(corr_peakdata,cmap=cm.rainbow,vmin=vmin,vmax=vmax)
+    fig.colorbar(im,ax=ax1,location='bottom', fraction=0.1)
+    ax1.set_title("Autocorrelation corrected img")
+    ax2.plot(E_list,sum_result, marker='o', markersize=1, markerfacecolor='orchid',
+                              markeredgecolor='orchid', linestyle='-', color='c', label='corrected peak spectra')
+    ax2.set_xlabel('Energy(eV)',fontsize=12, color='#20B2AA')
+    ax2.set_ylabel('intensity',fontsize=12, color='#20B2AA')
+    ax2.set_title(f"Corrected Spectral_{filename}")
+    save_fig=os.path.join(save_folder,f'Autocorrelated_img_{filename}.pdf')
+    plt.savefig(save_fig)
+    spectra_dict={"Energy(eV)":E_list,"Intensity":sum_result,"Index(pixel)":x_list}
+    pd_spectrum_data=pd.DataFrame(spectra_dict)
+    save_pd_data(pd_spectrum_data,save_folder,filename=f'Corrected-FullSpectrum_{filename}')
+    return corr_peakdata,pd_spectrum_data
 
 if __name__=="__main__":
     root = Tk()
@@ -320,10 +375,11 @@ if __name__=="__main__":
     root.destroy()
     # save corrected_list data
     save_folder,file=os.path.split(img_path)
+    corr_folder=creatPath(os.path.join(save_folder,'CorrectedResults'))
     filename,extension=os.path.splitext(file)
     print(f'save folder: {save_folder}\n filename:{filename}, type:{extension}')
     # selected point near the mid of the line
-    p_col=1133
+    p_col=1084
     p_row=1042
     half_n=50   # total 2*half_n rows for correction
 
@@ -371,8 +427,9 @@ if __name__=="__main__":
     # FWHM by direct add rows
     direct_addrows_FWHM(clean_matrix,p_col=p_col,save_folder=save_folder,filename=filename)
     # find the peak center for each slice
-    correlation_FWHM(clean_matrix,slice_n=slice_n,p_col=p_col,save_folder=save_folder,filename=filename)
-    
-    #minimal_FWHM_correlation(clean_matrix,slice_n=slice_n,p_col=p_col,save_folder=save_folder,filename=filename)
+    Fit_results,FWHM=correlation_FWHM(clean_matrix,slice_n=slice_n,p_col=p_col,save_folder=save_folder,filename=filename)
+    get_correlation_img(img_matrix,fit_para=Fit_results['fit_para'],p_col=p_col,save_folder=corr_folder,filename=filename)
+    #min_result=minimal_FWHM_correlation(clean_matrix,slice_n=slice_n,p_col=p_col,save_folder=save_folder,filename=filename)
+    #get_correlation_img(img_matrix,fit_para=min_result[0]['fit_para'],p_col=p_col)
     plt.show()
 

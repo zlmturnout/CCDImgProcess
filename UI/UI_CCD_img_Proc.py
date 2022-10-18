@@ -16,18 +16,18 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QGroupBox, QHBoxLayout,
-    QLabel, QLineEdit, QMainWindow, QMenu,
-    QMenuBar, QProgressBar, QPushButton, QSizePolicy,
-    QSlider, QSpacerItem, QStatusBar, QTabWidget,
-    QTextEdit, QToolBox, QToolButton, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QDoubleSpinBox, QGridLayout, QGroupBox,
+    QHBoxLayout, QLabel, QLineEdit, QMainWindow,
+    QMenu, QMenuBar, QProgressBar, QPushButton,
+    QSizePolicy, QSlider, QSpacerItem, QStatusBar,
+    QTabWidget, QTextEdit, QToolBox, QToolButton,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1417, 945)
+        MainWindow.resize(1308, 931)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -37,8 +37,8 @@ class Ui_MainWindow(object):
         MainWindow.setTabShape(QTabWidget.Triangular)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.gridLayout_3 = QGridLayout(self.centralwidget)
-        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.horizontalLayout_6 = QHBoxLayout(self.centralwidget)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.horizontalLayout_5 = QHBoxLayout()
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.verticalLayout_6 = QVBoxLayout()
@@ -62,9 +62,9 @@ class Ui_MainWindow(object):
         self.toolBox.setAutoFillBackground(False)
         self.page = QWidget()
         self.page.setObjectName(u"page")
-        self.page.setGeometry(QRect(0, 0, 300, 346))
-        self.gridLayout_2 = QGridLayout(self.page)
-        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.page.setGeometry(QRect(0, 0, 300, 332))
+        self.gridLayout_3 = QGridLayout(self.page)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.Refresh_tool = QPushButton(self.page)
         self.Refresh_tool.setObjectName(u"Refresh_tool")
         sizePolicy1 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -82,7 +82,7 @@ class Ui_MainWindow(object):
 "selection-color: rgb(255, 85, 127);\n"
 "color: rgb(255, 255, 255);")
 
-        self.gridLayout_2.addWidget(self.Refresh_tool, 0, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.Refresh_tool, 0, 0, 1, 1)
 
         self.Draw_box_tool = QToolButton(self.page)
         self.Draw_box_tool.setObjectName(u"Draw_box_tool")
@@ -98,7 +98,7 @@ class Ui_MainWindow(object):
         self.Draw_box_tool.setAutoRaise(True)
         self.Draw_box_tool.setArrowType(Qt.NoArrow)
 
-        self.gridLayout_2.addWidget(self.Draw_box_tool, 1, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.Draw_box_tool, 0, 1, 1, 1)
 
         self.half_n_input = QLineEdit(self.page)
         self.half_n_input.setObjectName(u"half_n_input")
@@ -109,55 +109,7 @@ class Ui_MainWindow(object):
         self.half_n_input.setInputMethodHints(Qt.ImhFormattedNumbersOnly|Qt.ImhPreferNumbers)
         self.half_n_input.setAlignment(Qt.AlignCenter)
 
-        self.gridLayout_2.addWidget(self.half_n_input, 4, 0, 1, 1)
-
-        self.Select_column_tool = QToolButton(self.page)
-        self.Select_column_tool.setObjectName(u"Select_column_tool")
-        self.Select_column_tool.setMinimumSize(QSize(120, 40))
-        self.Select_column_tool.setFont(font)
-        self.Select_column_tool.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
-"border-bottom-color: rgb(139, 139, 139);\n"
-"border-right-color: rgb(48, 48, 48);\n"
-"selection-color: rgb(255, 85, 127);\n"
-"color: rgb(255, 255, 255);")
-
-        self.gridLayout_2.addWidget(self.Select_column_tool, 2, 0, 1, 1)
-
-        self.toolButton_4 = QToolButton(self.page)
-        self.toolButton_4.setObjectName(u"toolButton_4")
-        self.toolButton_4.setMinimumSize(QSize(120, 40))
-        self.toolButton_4.setFont(font)
-        self.toolButton_4.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
-"border-bottom-color: rgb(139, 139, 139);\n"
-"border-right-color: rgb(48, 48, 48);\n"
-"selection-color: rgb(255, 85, 127);\n"
-"color: rgb(255, 255, 255);")
-
-        self.gridLayout_2.addWidget(self.toolButton_4, 0, 1, 1, 1)
-
-        self.toolButton_5 = QToolButton(self.page)
-        self.toolButton_5.setObjectName(u"toolButton_5")
-        self.toolButton_5.setMinimumSize(QSize(120, 40))
-        self.toolButton_5.setFont(font)
-        self.toolButton_5.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
-"border-bottom-color: rgb(139, 139, 139);\n"
-"border-right-color: rgb(48, 48, 48);\n"
-"selection-color: rgb(255, 85, 127);\n"
-"color: rgb(255, 255, 255);")
-
-        self.gridLayout_2.addWidget(self.toolButton_5, 1, 1, 1, 1)
-
-        self.Select_row_tool = QToolButton(self.page)
-        self.Select_row_tool.setObjectName(u"Select_row_tool")
-        self.Select_row_tool.setMinimumSize(QSize(120, 40))
-        self.Select_row_tool.setFont(font)
-        self.Select_row_tool.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
-"border-bottom-color: rgb(139, 139, 139);\n"
-"border-right-color: rgb(48, 48, 48);\n"
-"selection-color: rgb(255, 85, 127);\n"
-"color: rgb(255, 255, 255);")
-
-        self.gridLayout_2.addWidget(self.Select_row_tool, 2, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.half_n_input, 1, 0, 1, 1)
 
         self.CV_median_tool = QToolButton(self.page)
         self.CV_median_tool.setObjectName(u"CV_median_tool")
@@ -169,29 +121,49 @@ class Ui_MainWindow(object):
 "selection-color: rgb(255, 85, 127);\n"
 "color: rgb(255, 255, 255);")
 
-        self.gridLayout_2.addWidget(self.CV_median_tool, 4, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.CV_median_tool, 1, 1, 1, 1)
 
-        self.toolBox.addItem(self.page, u"Tools")
-        self.page_2 = QWidget()
-        self.page_2.setObjectName(u"page_2")
-        self.page_2.setGeometry(QRect(0, 0, 300, 346))
-        self.gridLayout_7 = QGridLayout(self.page_2)
-        self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.verticalLayout_3 = QVBoxLayout()
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.Add_row_btn = QPushButton(self.page_2)
-        self.Add_row_btn.setObjectName(u"Add_row_btn")
-        sizePolicy1.setHeightForWidth(self.Add_row_btn.sizePolicy().hasHeightForWidth())
-        self.Add_row_btn.setSizePolicy(sizePolicy1)
-        self.Add_row_btn.setMinimumSize(QSize(120, 40))
-        self.Add_row_btn.setFont(font)
-        self.Add_row_btn.setStyleSheet(u"background-color: rgb(146, 57, 255);\n"
+        self.Select_column_tool = QToolButton(self.page)
+        self.Select_column_tool.setObjectName(u"Select_column_tool")
+        self.Select_column_tool.setMinimumSize(QSize(120, 40))
+        self.Select_column_tool.setFont(font)
+        self.Select_column_tool.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
 "border-bottom-color: rgb(139, 139, 139);\n"
 "border-right-color: rgb(48, 48, 48);\n"
 "selection-color: rgb(255, 85, 127);\n"
 "color: rgb(255, 255, 255);")
 
-        self.verticalLayout_3.addWidget(self.Add_row_btn)
+        self.gridLayout_3.addWidget(self.Select_column_tool, 2, 0, 1, 1)
+
+        self.Select_row_tool = QToolButton(self.page)
+        self.Select_row_tool.setObjectName(u"Select_row_tool")
+        self.Select_row_tool.setMinimumSize(QSize(120, 40))
+        self.Select_row_tool.setFont(font)
+        self.Select_row_tool.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.gridLayout_3.addWidget(self.Select_row_tool, 2, 1, 1, 1)
+
+        self.toolBox.addItem(self.page, u"Tools")
+        self.page_2 = QWidget()
+        self.page_2.setObjectName(u"page_2")
+        self.page_2.setGeometry(QRect(0, 0, 300, 332))
+        self.gridLayout_2 = QGridLayout(self.page_2)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.toolButton_4 = QToolButton(self.page_2)
+        self.toolButton_4.setObjectName(u"toolButton_4")
+        self.toolButton_4.setMinimumSize(QSize(120, 40))
+        self.toolButton_4.setFont(font)
+        self.toolButton_4.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.gridLayout_2.addWidget(self.toolButton_4, 2, 1, 1, 1)
 
         self.Save_row_col_btn = QPushButton(self.page_2)
         self.Save_row_col_btn.setObjectName(u"Save_row_col_btn")
@@ -205,7 +177,7 @@ class Ui_MainWindow(object):
 "selection-color: rgb(255, 85, 127);\n"
 "color: rgb(255, 255, 255);")
 
-        self.verticalLayout_3.addWidget(self.Save_row_col_btn)
+        self.gridLayout_2.addWidget(self.Save_row_col_btn, 2, 0, 1, 1)
 
         self.Add_col_btn = QPushButton(self.page_2)
         self.Add_col_btn.setObjectName(u"Add_col_btn")
@@ -219,10 +191,33 @@ class Ui_MainWindow(object):
 "selection-color: rgb(255, 85, 127);\n"
 "color: rgb(255, 255, 255);")
 
-        self.verticalLayout_3.addWidget(self.Add_col_btn)
+        self.gridLayout_2.addWidget(self.Add_col_btn, 0, 0, 1, 1)
 
+        self.Add_row_btn = QPushButton(self.page_2)
+        self.Add_row_btn.setObjectName(u"Add_row_btn")
+        sizePolicy1.setHeightForWidth(self.Add_row_btn.sizePolicy().hasHeightForWidth())
+        self.Add_row_btn.setSizePolicy(sizePolicy1)
+        self.Add_row_btn.setMinimumSize(QSize(120, 40))
+        self.Add_row_btn.setFont(font)
+        self.Add_row_btn.setStyleSheet(u"background-color: rgb(146, 57, 255);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
 
-        self.gridLayout_7.addLayout(self.verticalLayout_3, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.Add_row_btn, 0, 1, 1, 1)
+
+        self.toolButton_5 = QToolButton(self.page_2)
+        self.toolButton_5.setObjectName(u"toolButton_5")
+        self.toolButton_5.setMinimumSize(QSize(120, 40))
+        self.toolButton_5.setFont(font)
+        self.toolButton_5.setStyleSheet(u"background-color: rgb(33, 190, 193);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.gridLayout_2.addWidget(self.toolButton_5, 3, 1, 1, 1)
 
         self.toolBox.addItem(self.page_2, u"Action")
 
@@ -508,10 +503,6 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.Peak_Correlation_btn)
 
-        self.horizontalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
-
         self.AutoCorrection_btn = QPushButton(self.centralwidget)
         self.AutoCorrection_btn.setObjectName(u"AutoCorrection_btn")
         sizePolicy1.setHeightForWidth(self.AutoCorrection_btn.sizePolicy().hasHeightForWidth())
@@ -525,6 +516,88 @@ class Ui_MainWindow(object):
 "color: rgb(255, 255, 255);")
 
         self.horizontalLayout_4.addWidget(self.AutoCorrection_btn)
+
+        self.horizontalSpacer_2 = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
+
+        self.label_4 = QLabel(self.centralwidget)
+        self.label_4.setObjectName(u"label_4")
+        sizePolicy1.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy1)
+        self.label_4.setMinimumSize(QSize(100, 40))
+        self.label_4.setMaximumSize(QSize(35, 40))
+        palette4 = QPalette()
+        palette4.setBrush(QPalette.Active, QPalette.WindowText, brush)
+        palette4.setBrush(QPalette.Active, QPalette.Text, brush)
+        palette4.setBrush(QPalette.Active, QPalette.ButtonText, brush)
+        palette4.setBrush(QPalette.Inactive, QPalette.WindowText, brush1)
+        palette4.setBrush(QPalette.Inactive, QPalette.Text, brush1)
+        palette4.setBrush(QPalette.Inactive, QPalette.ButtonText, brush1)
+        palette4.setBrush(QPalette.Disabled, QPalette.WindowText, brush2)
+        palette4.setBrush(QPalette.Disabled, QPalette.Text, brush2)
+        palette4.setBrush(QPalette.Disabled, QPalette.ButtonText, brush2)
+        self.label_4.setPalette(palette4)
+        self.label_4.setFont(font)
+        self.label_4.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_4.addWidget(self.label_4)
+
+        self.Dispersion_const_spinbox = QDoubleSpinBox(self.centralwidget)
+        self.Dispersion_const_spinbox.setObjectName(u"Dispersion_const_spinbox")
+        sizePolicy1.setHeightForWidth(self.Dispersion_const_spinbox.sizePolicy().hasHeightForWidth())
+        self.Dispersion_const_spinbox.setSizePolicy(sizePolicy1)
+        self.Dispersion_const_spinbox.setMinimumSize(QSize(100, 40))
+        palette5 = QPalette()
+        brush6 = QBrush(QColor(255, 60, 34, 255))
+        brush6.setStyle(Qt.SolidPattern)
+        palette5.setBrush(QPalette.Active, QPalette.WindowText, brush6)
+        palette5.setBrush(QPalette.Active, QPalette.Text, brush6)
+        palette5.setBrush(QPalette.Active, QPalette.ButtonText, brush6)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette5.setBrush(QPalette.Active, QPalette.PlaceholderText, brush6)
+#endif
+        palette5.setBrush(QPalette.Inactive, QPalette.WindowText, brush6)
+        palette5.setBrush(QPalette.Inactive, QPalette.Text, brush6)
+        palette5.setBrush(QPalette.Inactive, QPalette.ButtonText, brush6)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette5.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush6)
+#endif
+        palette5.setBrush(QPalette.Disabled, QPalette.WindowText, brush6)
+        palette5.setBrush(QPalette.Disabled, QPalette.Text, brush6)
+        palette5.setBrush(QPalette.Disabled, QPalette.ButtonText, brush6)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette5.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush6)
+#endif
+        self.Dispersion_const_spinbox.setPalette(palette5)
+        font2 = QFont()
+        font2.setFamilies([u"Cambria Math"])
+        font2.setPointSize(12)
+        font2.setBold(False)
+        self.Dispersion_const_spinbox.setFont(font2)
+        self.Dispersion_const_spinbox.setStyleSheet(u"color: rgb(255, 60, 34);")
+        self.Dispersion_const_spinbox.setInputMethodHints(Qt.ImhFormattedNumbersOnly|Qt.ImhNoAutoUppercase|Qt.ImhPreferNumbers)
+        self.Dispersion_const_spinbox.setAlignment(Qt.AlignCenter)
+        self.Dispersion_const_spinbox.setMinimum(-1000.000000000000000)
+        self.Dispersion_const_spinbox.setMaximum(1000.000000000000000)
+        self.Dispersion_const_spinbox.setSingleStep(0.100000000000000)
+        self.Dispersion_const_spinbox.setValue(29.300000000000001)
+
+        self.horizontalLayout_4.addWidget(self.Dispersion_const_spinbox)
+
+        self.FullSpectrum_btn = QPushButton(self.centralwidget)
+        self.FullSpectrum_btn.setObjectName(u"FullSpectrum_btn")
+        sizePolicy1.setHeightForWidth(self.FullSpectrum_btn.sizePolicy().hasHeightForWidth())
+        self.FullSpectrum_btn.setSizePolicy(sizePolicy1)
+        self.FullSpectrum_btn.setMinimumSize(QSize(120, 40))
+        self.FullSpectrum_btn.setFont(font)
+        self.FullSpectrum_btn.setStyleSheet(u"background-color: rgb(255, 60, 34);\n"
+"border-bottom-color: rgb(139, 139, 139);\n"
+"border-right-color: rgb(48, 48, 48);\n"
+"selection-color: rgb(255, 85, 127);\n"
+"color: rgb(255, 255, 255);")
+
+        self.horizontalLayout_4.addWidget(self.FullSpectrum_btn)
 
         self.progressBar = QProgressBar(self.centralwidget)
         self.progressBar.setObjectName(u"progressBar")
@@ -578,10 +651,10 @@ class Ui_MainWindow(object):
         self.info_textbox.setSizePolicy(sizePolicy3)
         self.info_textbox.setMinimumSize(QSize(200, 100))
         self.info_textbox.setMaximumSize(QSize(200, 300))
-        font2 = QFont()
-        font2.setFamilies([u"Arial"])
-        font2.setPointSize(10)
-        self.info_textbox.setFont(font2)
+        font3 = QFont()
+        font3.setFamilies([u"Arial"])
+        font3.setPointSize(10)
+        self.info_textbox.setFont(font3)
         self.info_textbox.setAcceptDrops(True)
         self.info_textbox.setReadOnly(True)
 
@@ -591,16 +664,16 @@ class Ui_MainWindow(object):
         self.horizontalLayout_5.addLayout(self.verticalLayout_5)
 
 
-        self.gridLayout_3.addLayout(self.horizontalLayout_5, 0, 0, 1, 1)
+        self.horizontalLayout_6.addLayout(self.horizontalLayout_5)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1417, 31))
-        font3 = QFont()
-        font3.setPointSize(14)
-        font3.setBold(False)
-        self.menubar.setFont(font3)
+        self.menubar.setGeometry(QRect(0, 0, 1308, 31))
+        font4 = QFont()
+        font4.setPointSize(14)
+        font4.setBold(False)
+        self.menubar.setFont(font4)
         self.menubar.setStyleSheet(u"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(255, 235, 235, 206), stop:0.136364 rgba(255, 188, 188, 80), stop:0.329545 rgba(255, 162, 162, 80), stop:0.477273 rgba(255, 132, 132, 156), stop:0.897727 rgba(203, 48, 185, 80));")
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
@@ -634,15 +707,15 @@ class Ui_MainWindow(object):
         self.Refresh_tool.setText(QCoreApplication.translate("MainWindow", u"Refresh", None))
         self.Draw_box_tool.setText(QCoreApplication.translate("MainWindow", u"Draw box", None))
         self.half_n_input.setText(QCoreApplication.translate("MainWindow", u"50", None))
-        self.Select_column_tool.setText(QCoreApplication.translate("MainWindow", u"Column", None))
-        self.toolButton_4.setText(QCoreApplication.translate("MainWindow", u"Rotate +90", None))
-        self.toolButton_5.setText(QCoreApplication.translate("MainWindow", u"Rotate -90", None))
-        self.Select_row_tool.setText(QCoreApplication.translate("MainWindow", u"Row", None))
         self.CV_median_tool.setText(QCoreApplication.translate("MainWindow", u"CV_Median", None))
+        self.Select_column_tool.setText(QCoreApplication.translate("MainWindow", u"Column", None))
+        self.Select_row_tool.setText(QCoreApplication.translate("MainWindow", u"Row", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page), QCoreApplication.translate("MainWindow", u"Tools", None))
-        self.Add_row_btn.setText(QCoreApplication.translate("MainWindow", u"Sum_Row", None))
+        self.toolButton_4.setText(QCoreApplication.translate("MainWindow", u"Rotate +90", None))
         self.Save_row_col_btn.setText(QCoreApplication.translate("MainWindow", u"Save lines", None))
-        self.Add_col_btn.setText(QCoreApplication.translate("MainWindow", u"Sum_COl", None))
+        self.Add_col_btn.setText(QCoreApplication.translate("MainWindow", u"Sum_Col", None))
+        self.Add_row_btn.setText(QCoreApplication.translate("MainWindow", u"Sum_Row", None))
+        self.toolButton_5.setText(QCoreApplication.translate("MainWindow", u"Rotate -90", None))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page_2), QCoreApplication.translate("MainWindow", u"Action", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"Color Range", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Min", None))
@@ -660,6 +733,12 @@ class Ui_MainWindow(object):
         self.Slice_correction_btn.setText(QCoreApplication.translate("MainWindow", u"SliceCorrection", None))
         self.Peak_Correlation_btn.setText(QCoreApplication.translate("MainWindow", u"PeakCorrelation", None))
         self.AutoCorrection_btn.setText(QCoreApplication.translate("MainWindow", u"FullCorrection", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"Dispersion", None))
+#if QT_CONFIG(tooltip)
+        self.Dispersion_const_spinbox.setToolTip(QCoreApplication.translate("MainWindow", u"Dispersion constant", None))
+#endif // QT_CONFIG(tooltip)
+        self.Dispersion_const_spinbox.setSuffix(QCoreApplication.translate("MainWindow", u" meV", None))
+        self.FullSpectrum_btn.setText(QCoreApplication.translate("MainWindow", u"FullSpectrum", None))
         self.Open_img_btn.setText(QCoreApplication.translate("MainWindow", u"Open image", None))
         self.Row_box.setTitle(QCoreApplication.translate("MainWindow", u"Row", None))
         self.info_textbox.setHtml(QCoreApplication.translate("MainWindow", u"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"

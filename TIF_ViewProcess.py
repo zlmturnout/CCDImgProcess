@@ -37,7 +37,7 @@ from tifffile import tifffile
 from Architect.AutoCorrelation_GaussPeak import (correlation_FWHM,
                                                  get_slice_peaks,
                                                  minimal_FWHM_correlation,
-                                                 plot_GaussFit_results)
+                                                 plot_GaussFit_results,get_correlation_img, save_pd_data)
 from Architect.PeakCorrection_GECCD import (minimize_FWHM,
                                             partial_peak_correct,
                                             plot_SliceFit_line, tif_preprocess)
@@ -152,6 +152,9 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.file_folder=os.getcwd()
         self.fitData_folder=today_folder
         self.file_title=''
+        # for fit parameter
+        self.fit_para=[0,0,0] #[a,b,c]:y=a+b*x+c*x**2
+        self.dispersion_const=29.3
 
     def open_tif_img(self):
         """
@@ -334,6 +337,9 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         # plot best fit results with minimal FWHM
         plot_GaussFit_results(min_result[0],save_folder=self.fitData_folder,title=f'{self.file_title}_slice_n-{slice_n}_p_col-{p_col}')
         print(f'find minimal FWHM={min_result[1]:.4f} with parameter {min_result[-1]} and\n {min_result[0]["para"]}')
+        # fit parameter
+        self.fit_para=min_result[0]["fit_para"]
+        self.fit_peak_center=p_col
         clean_matrix,median_matrix=tif_preprocess(self.Sub_img_data)
         row_list,col_list=get_slice_peaks(clean_matrix,slice_n=slice_n,p_col=p_col)
         fig3 = plt.figure(figsize =(16, 9)) 
@@ -384,6 +390,18 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         plot_SliceFit_line(Total_add_result,index=slice_n+1,save_folder=self.fitData_folder,title=self.file_title)
         plt.show()
     
+    @Slot()
+    def on_FullSpectrum_btn_clicked(self):
+        """get the corrected img and full spectrum with the fit para=[a,b,c] and dispersion const
+
+        Returns:
+            _type_: _description_
+        """
+        if not self.fit_para==[0,0,0]:
+            corr_peakdata,pd_spectrum_data=get_correlation_img(self.Main_img_data,fit_para=self.fit_para,p_col=self.fit_peak_center,save_folder=self.fitData_folder,filename=self.file_title)
+            plt.show()
+            self.save_pd_data(pd_spectrum_data,info="Save Full Spectrum data")
+            
     @Slot()
     def on_Add_row_btn_clicked(self):
         if not self.Main_img_data.size == 0:
@@ -452,12 +470,11 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             filename, filetype = QFileDialog.getSaveFileName(self, info+"(excel file:xlsx)",
                                                              self.file_folder, '*.xlsx')
             # excel writer
-            print(filename, filetype)
+            #print(filename, filetype)
             if filename.endswith('.xlsx'):
-                excel_writer = pd.ExcelWriter(filename)
-                pd_data.to_excel(excel_writer)
-                excel_writer.save()
-                print('save to excel xlsx file successfully')
+                with pd.ExcelWriter(filename) as writer:
+                    pd_data.to_excel(writer)
+                #print('save to excel xlsx file successfully')
 
     '''
     end of data process part
@@ -474,6 +491,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.Imax_Slider.sliderReleased.connect(self.update_main_img)
         self.Imin_text.returnPressed.connect(self.Imin_input_finished)
         self.Imax_text.returnPressed.connect(self.Imax_input_finished)
+        self.Dispersion_const_spinbox.valueChanged['double'].connect(self.set_dispersion_c)
         self.draw_box_flag=False
         self.select_row_flag=False
         self.select_column_flag=False
@@ -549,7 +567,14 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         """
         slice_n=int(self.Slice_input.text())
         return slice_n if slice_n>0 and slice_n<1000 else 20
-
+    
+    @Slot(float)
+    def set_dispersion_c(self,dis_const):
+        print(f'get dispersion const: {dis_const} meV')
+        #dis_const=float(self.Dispersion_const_spinbox.text().strip(' meV'))
+        self.dispersion_const=dis_const
+        return dis_const
+    
     @Slot()
     def on_Draw_box_tool_clicked(self):
         self.find_peak_flag=False
@@ -625,6 +650,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.box_width=0
         self.box_height=0
         self.peak_col=0
+        self.fit_peak_center=0
         self.half_n=50
         self.cidpress = self._Main_ax.figure.canvas.mpl_connect(
             'button_press_event', self.on_main_press)
@@ -721,6 +747,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             Box_img_data=self.Main_img_data[start_row:end_row,start_col:end_col]
             # define the input matrix for correction
             self.peak_col=round((start_col+end_col)/2)
+            self.fit_peak_center=self.peak_col # set the fit peak center to selected one
             self.half_n=round(abs(end_col-start_col)/2)
             self.Sub_img_data=self.Main_img_data[:,self.peak_col-self.half_n:self.peak_col+self.half_n] 
             ROI_area=f'ROI area box shape=({end_col-start_col},{end_row-start_row})\n center at ({self.peak_col},{round((start_row+end_row)/2)})'
@@ -772,7 +799,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             peak_info=f'peak_col: {self.peak_col} half_n: {self.half_n}\n'
             self.show_ROI_info(peak_info+ROI_area)
             print(f'peak_col: {self.peak_col} half_n: {self.half_n}\n')
-
+        self.fit_peak_center=self.peak_col # set the fit peak center to selected one
         self.Sub_img_data=self.Peak_img_data
 
         self.show_Sub_img(self.Peak_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
