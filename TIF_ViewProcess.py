@@ -401,7 +401,8 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             corr_peakdata,pd_spectrum_data=get_correlation_img(self.Main_img_data,fit_para=self.fit_para,p_col=self.fit_peak_center,save_folder=self.fitData_folder,filename=self.file_title)
             plt.show()
             self.save_pd_data(pd_spectrum_data,info="Save Full Spectrum data")
-            
+        else:
+            print('Correct img first')
     @Slot()
     def on_Add_row_btn_clicked(self):
         if not self.Main_img_data.size == 0:
