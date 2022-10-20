@@ -155,6 +155,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         # for fit parameter
         self.fit_para=[0,0,0] #[a,b,c]:y=a+b*x+c*x**2
         self.dispersion_const=29.3
+        self.Energy_in=443.5
 
     def open_tif_img(self):
         """
@@ -398,11 +399,12 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             _type_: _description_
         """
         if not self.fit_para==[0,0,0]:
-            corr_peakdata,pd_spectrum_data=get_correlation_img(self.Main_img_data,fit_para=self.fit_para,p_col=self.fit_peak_center,save_folder=self.fitData_folder,filename=self.file_title)
+            corr_peakdata,pd_spectrum_data=get_correlation_img(self.Main_img_data,fit_para=self.fit_para,p_col=self.fit_peak_center,save_folder=self.fitData_folder,filename=self.file_title,E_in=self.Energy_in)
             plt.show()
             self.save_pd_data(pd_spectrum_data,info="Save Full Spectrum data")
         else:
             print('Correct img first')
+    
     @Slot()
     def on_Add_row_btn_clicked(self):
         if not self.Main_img_data.size == 0:
@@ -493,6 +495,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.Imin_text.returnPressed.connect(self.Imin_input_finished)
         self.Imax_text.returnPressed.connect(self.Imax_input_finished)
         self.Dispersion_const_spinbox.valueChanged['double'].connect(self.set_dispersion_c)
+        self.Energy_in_spinbox.valueChanged['double'].connect(self.set_Energy_in)
         self.draw_box_flag=False
         self.select_row_flag=False
         self.select_column_flag=False
@@ -575,6 +578,12 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         #dis_const=float(self.Dispersion_const_spinbox.text().strip(' meV'))
         self.dispersion_const=dis_const
         return dis_const
+    
+    @Slot(float)
+    def set_Energy_in(self,E_in):
+        print(f'get indent Energy: {E_in} meV')
+        self.Energy_in=E_in
+        return E_in
     
     @Slot()
     def on_Draw_box_tool_clicked(self):

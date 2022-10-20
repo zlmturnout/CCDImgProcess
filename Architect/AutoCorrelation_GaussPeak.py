@@ -326,7 +326,7 @@ def minimal_FWHM_correlation(peak_data:np.array([]),slice_n:int=100,p_col:int=93
     print(f'find minimal FWHM={min_result[1]:.4f} with parameter {min_result[-1]}')
     return min_result
 
-def get_correlation_img(peak_data:np.array([]),fit_para:list,p_col:int=935,dis_const:float=29.3,vmin:int=1300,vmax:int=1380,save_folder:str='./',filename:str='correctedPeak_img'):
+def get_correlation_img(peak_data:np.array([]),fit_para:list,p_col:int=935,dis_const:float=29.3,vmin:int=1300,vmax:int=1380,save_folder:str='./',filename:str='correctedPeak_img',E_in:float=443.5):
     """correct raw image based on the fit_parameter of peak-line,peak center at p_col
     fit_para:[a,b,c] means y=a+b*x+c*x**2
 
@@ -338,7 +338,7 @@ def get_correlation_img(peak_data:np.array([]),fit_para:list,p_col:int=935,dis_c
     row,column=peak_data.shape
     half_n=round(column/2)
     x_list=np.array([i for i in range(column)])-half_n+p_col
-    E_list=(np.array([i for i in range(column)])-half_n+p_col)*dis_const/1000+443.5
+    E_list=-(np.array([i for i in range(column)])-p_col)*dis_const/1000+E_in
     # find the  FWHM with parameter j
     FWHM_info=None
     corr_peakdata=np.zeros(shape=peak_data.shape)
@@ -366,7 +366,7 @@ def get_correlation_img(peak_data:np.array([]),fit_para:list,p_col:int=935,dis_c
     plt.savefig(save_fig)
     spectra_dict={"Energy(eV)":E_list,"Intensity":sum_result,"Index(pixel)":x_list}
     pd_spectrum_data=pd.DataFrame(spectra_dict)
-    save_pd_data(pd_spectrum_data,save_folder,filename=f'Corrected-FullSpectrum_{filename}')
+    save_pd_data(pd_spectrum_data,save_folder,filename=f'Corrected-FullSpectrum_E_in_{E_in}_{filename}')
     return corr_peakdata,pd_spectrum_data
 
 if __name__=="__main__":
