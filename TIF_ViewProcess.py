@@ -807,7 +807,8 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         #save by filename
         folderpath,file=os.path.split(img_file)
         filename,extension=os.path.splitext(file)
-        plt.text(0, 0.5, s=f'Image file:\n{filename}',color = "m", transform=ax4.transAxes,fontsize=15)
+        new_filwename=filename.replace("_","\n")
+        plt.text(0.3, 0.4, s=f'Image file:\n{new_filwename}',color = "m", transform=ax4.transAxes,fontsize=15)
         plt.savefig(img_file)
 
     # **************************************LIMIN_Zhou_at_SSRF_BL20U**************************************
