@@ -1,6 +1,6 @@
-import PySide6,sys
-from PySide6.QtWidgets import QWidget, QApplication, QMainWindow
-    
+import sys
+import PySide6
+from PySide6.QtWidgets import QApplication, QMainWindow, QWidget
 from TIF_ViewProcess import *
 
 """Main entrance  
