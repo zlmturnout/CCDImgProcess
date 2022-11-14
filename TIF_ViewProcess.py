@@ -19,10 +19,14 @@ import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.backends.backend_qtagg import FigureCanvas
-from matplotlib.backends.backend_qtagg import \
-    NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.qt_compat import QtWidgets
+from matplotlib.backends.backend_qtagg import (
+    FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
+# from matplotlib.backends.backend_qtagg import FigureCanvas
+# from matplotlib.backends.backend_qtagg import \
+#     NavigationToolbar2QT as NavigationToolbar
+# from matplotlib.figure import Figure
 from matplotlib.patches import Rectangle
 from matplotlib.pyplot import MultipleLocator
 from PIL import Image
@@ -156,6 +160,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         self.fit_para=[0,0,0] #[a,b,c]:y=a+b*x+c*x**2
         self.dispersion_const=29.3
         self.Energy_in=443.5
+        self.fit_peak_center=0
 
     def open_tif_img(self):
         """
@@ -398,8 +403,10 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
         Returns:
             _type_: _description_
         """
-        if not self.fit_para==[0,0,0]:
-            corr_peakdata,pd_spectrum_data=get_correlation_img(self.Main_img_data,fit_para=self.fit_para,p_col=self.fit_peak_center,save_folder=self.fitData_folder,filename=self.file_title,E_in=self.Energy_in)
+        Imin=self.Imin_Slider.value()
+        Imax=self.Imax_Slider.value()
+        if not self.fit_para==[0,0,0] and not self.fit_peak_center==0:
+            corr_peakdata,pd_spectrum_data=get_correlation_img(self.Main_img_data,fit_para=self.fit_para,p_col=self.fit_peak_center,save_folder=self.fitData_folder,filename=self.file_title,E_in=self.Energy_in,vmin=Imin,vmax=Imax)
             plt.show()
             self.save_pd_data(pd_spectrum_data,info="Save Full Spectrum data")
         else:
@@ -757,7 +764,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             Box_img_data=self.Main_img_data[start_row:end_row,start_col:end_col]
             # define the input matrix for correction
             self.peak_col=round((start_col+end_col)/2)
-            self.fit_peak_center=self.peak_col # set the fit peak center to selected one
+            #self.fit_peak_center=self.peak_col # set the fit peak center to selected one
             self.half_n=round(abs(end_col-start_col)/2)
             self.Sub_img_data=self.Main_img_data[:,self.peak_col-self.half_n:self.peak_col+self.half_n] 
             ROI_area=f'ROI area box shape=({end_col-start_col},{end_row-start_row})\n center at ({self.peak_col},{round((start_row+end_row)/2)})'
@@ -809,7 +816,7 @@ class TIFProcess(QMainWindow, Ui_MainWindow):
             peak_info=f'peak_col: {self.peak_col} half_n: {self.half_n}\n'
             self.show_ROI_info(peak_info+ROI_area)
             print(f'peak_col: {self.peak_col} half_n: {self.half_n}\n')
-        self.fit_peak_center=self.peak_col # set the fit peak center to selected one
+        #self.fit_peak_center=self.peak_col # set the fit peak center to selected one
         self.Sub_img_data=self.Peak_img_data
 
         self.show_Sub_img(self.Peak_img_data,Imin=self.Imin_Slider.value(),Imax=self.Imax_Slider.value())
